@@ -9,7 +9,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 
 from selenium.common.exceptions import JavascriptException
 import time
