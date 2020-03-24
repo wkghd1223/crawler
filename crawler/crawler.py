@@ -29,6 +29,16 @@ def downLoadURl(image_src, img_save_url, keyword, idx):
     file.close()
     '''
     
+def select(image_src):
+#     img = cv2.imread(image_src)
+#     cv2.imshow('crawled',img)
+    key = cv2.waitKey(0) & 0xFF 
+    if key == ord('d'): # d 누르면 사진 저장 안 함 건너뜀.
+        return False;
+    else: # d 제외 아무 키나 누르면 저장 후 넘어감.
+        return True;
+    
+    cv2.destroyAllWindow();
 
 def checkDuplicate(url_name, image_src):
     if image_src in url_name:
@@ -130,7 +140,9 @@ def getImage(keyword, limit):
 
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
-
+                    
+                    
+                    
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
                         isLastImage = True
@@ -158,8 +170,12 @@ def getImage(keyword, limit):
                     else:
                         #URL 저장
                         downLoadURL(image_src img_save_url, keyword,idx)
-                        # 이미지 저장
-                        downLoadImage(image_src, img_save_url, keyword, idx)
+                        # 이미지 저장                        pre_image_src = image_src
+                        if (select(image_src)):
+                            # 이미지 저장
+                            downLoadImage(image_src, img_save_url, keyword, idx);
+                       
+                       
 
                     if limit == idx:
                         break
@@ -189,4 +205,3 @@ def getImage(keyword, limit):
 
 getImage("receipt test", 1)
 
-## 5works 어깨깡패 전현태 매니저 사진을 키워드에 넣어봤습니다.
