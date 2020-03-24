@@ -229,5 +229,5 @@ def order_point(pts):
 
 # src = cv2.imread('img/adffg.jpg')
 # point('img/adfewr.jpg')
-getImage("영수증", 50)
+getImage("영수증", 100)
 ## 5works 어깨깡패 전현태 매니저 사진을 키워드에 넣어봤습니다.
