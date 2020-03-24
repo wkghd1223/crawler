@@ -13,8 +13,6 @@ from selenium.common.exceptions import JavascriptException
 import time
 import os
 
-
-
 def url_to_image(url):
     # download the image, convert it to a NumPy array, and then read
     # it into OpenCV format
@@ -22,9 +20,22 @@ def url_to_image(url):
     image = np.asarray(bytearray(resp.read()), dtype="uint8")
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     # return the image
-    return image
-
-
+    return imagedef downLoadURl(image_src, img_save_url, keyword, idx):
+    link=np.array()
+    try:
+    except:
+    link=np.append(img.get_attribute('src')
+                   
+        
+    file=("img_list.txt",link)     
+    print("URL 저장"+str(idx))
+    
+    '''
+    file=("img_list.txt","a","UTF-8")
+    file.write(img_src)
+    file.close()
+    '''
+    
 def select(image_src):
     img = url_to_image(image_src)
     cv2.imshow('crawled',img)
@@ -106,6 +117,13 @@ def getImage(keyword, limit):
             # img src 가져옴
             image_src = big_image.get_attribute("src")
 
+            # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
+            if checkDuplicate(url_name, image_src):
+                return
+            #URL 저장
+            downLoadURL(image_src img_save_url, keyword,idx)
+            print("*** URL 저장 완료 ***")
+
             # 이미지 저장
             downLoadImage(image_src, img_save_url, keyword, idx)
             print("*** 이미지 저장 완료 ***")
@@ -129,6 +147,14 @@ def getImage(keyword, limit):
                     
                     
                     
+                    # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
+                    if checkDuplicate(url_name, image_src):
+                        isLastImage = True
+                        continue
+                    #URL 저장
+                    downLoadURL(image_src img_save_url, keyword,idx)
+                    print("*** URL 저장 완료 ***")
+
                     # 이미지 저장
                     downLoadImage(image_src, img_save_url, keyword, idx)
                     print("*** 이미지 저장 완료 ***")
@@ -162,7 +188,9 @@ def getImage(keyword, limit):
 
                         continue
                     else:
-                        pre_image_src = image_src
+                        #URL 저장
+                        downLoadURL(image_src img_save_url, keyword,idx)
+                        # 이미지 저장                        pre_image_src = image_src
                         if (select(image_src)):
                             # 이미지 저장
                             downLoadImage(image_src, img_save_url, keyword, idx);
