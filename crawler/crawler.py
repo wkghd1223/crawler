@@ -9,11 +9,20 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 import numpy as np
 import cv2
-#iiiiiiiiiiiiiiiiiiiii
 from selenium.common.exceptions import JavascriptException
 import time
 import os
 
+def select(image_src):
+#     img = cv2.imread(image_src)
+#     cv2.imshow('crawled',img)
+    key = cv2.waitKey(0) & 0xFF 
+    if key == ord('d'): # d 누르면 사진 저장 안 함 건너뜀.
+        return False;
+    else: # d 제외 아무 키나 누르면 저장 후 넘어감.
+        return True;
+    
+    cv2.destroyAllWindow();
 
 def downLoadImage(image_src, img_save_url, keyword, idx):
     # 검색어로 폴더 생성
@@ -105,7 +114,9 @@ def getImage(keyword, limit):
 
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
-
+                    
+                    
+                    
                     # 이미지 저장
                     downLoadImage(image_src, img_save_url, keyword, idx)
                     print("*** 이미지 저장 완료 ***")
@@ -140,9 +151,11 @@ def getImage(keyword, limit):
                         continue
                     else:
                         pre_image_src = image_src
-
-                        # 이미지 저장
-                        downLoadImage(image_src, img_save_url, keyword, idx)
+                        if (select(image_src)):
+                            # 이미지 저장
+                            downLoadImage(image_src, img_save_url, keyword, idx);
+                       
+                       
 
                         if limit == idx:
                             break
@@ -236,4 +249,4 @@ def order_point(pts):
 
 # src = cv2.imread('img/adffg.jpg')
 # point('img/adfewr.jpg')
-getImage("영수증", 50)## 5works 어깨깡패 전현태 매니저 사진을 키워드에 넣어봤습니다.
+getImage("영수증", 50)
