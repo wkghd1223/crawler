@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import numpy as np
 import cv2
 #fsdfdsfsad
+# 제 이름은 김상경입니다. 감사합니다
 from selenium.common.exceptions import JavascriptException
 import time
 import os
