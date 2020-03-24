@@ -20,21 +20,7 @@ def url_to_image(url):
     image = np.asarray(bytearray(resp.read()), dtype="uint8")
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     # return the image
-    return imagedef downLoadURl(image_src, img_save_url, keyword, idx):
-    link=np.array()
-    try:
-    except:
-    link=np.append(img.get_attribute('src')
-                   
-        
-    file=("img_list.txt",link)     
-    print("URL 저장"+str(idx))
-    
-    '''
-    file=("img_list.txt","a","UTF-8")
-    file.write(img_src)
-    file.close()
-    '''
+    return image
     
 def select(image_src):
     img = url_to_image(image_src)
