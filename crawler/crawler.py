@@ -13,6 +13,22 @@ from selenium.common.exceptions import JavascriptException
 import time
 import os
 
+def downLoadURl(image_src, img_save_url, keyword, idx):
+    link=np.array()
+    try:
+    except:
+    link=np.append(img.get_attribute('src')
+                   
+        
+    file=("img_list.txt",link)     
+    print("URL 저장"+str(idx))
+    
+    '''
+    file=("img_list.txt","a","UTF-8")
+    file.write(img_src)
+    file.close()
+    '''
+    
 
 def checkDuplicate(url_name, image_src):
     if image_src in url_name:
@@ -90,6 +106,9 @@ def getImage(keyword, limit):
             # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
             if checkDuplicate(url_name, image_src):
                 return
+            #URL 저장
+            downLoadURL(image_src img_save_url, keyword,idx)
+            print("*** URL 저장 완료 ***")
 
             # 이미지 저장
             downLoadImage(image_src, img_save_url, keyword, idx)
@@ -116,6 +135,9 @@ def getImage(keyword, limit):
                     if checkDuplicate(url_name, image_src):
                         isLastImage = True
                         continue
+                    #URL 저장
+                    downLoadURL(image_src img_save_url, keyword,idx)
+                    print("*** URL 저장 완료 ***")
 
                     # 이미지 저장
                     downLoadImage(image_src, img_save_url, keyword, idx)
@@ -134,6 +156,8 @@ def getImage(keyword, limit):
                     if checkDuplicate(url_name, image_src):
                         continue
                     else:
+                        #URL 저장
+                        downLoadURL(image_src img_save_url, keyword,idx)
                         # 이미지 저장
                         downLoadImage(image_src, img_save_url, keyword, idx)
 
