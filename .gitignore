@@ -1,0 +1,5 @@
+.git
+.idea
+img/*.jpg
+test_img/*jpg
+.DS_Store
