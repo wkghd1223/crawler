@@ -13,25 +13,25 @@ from selenium.common.exceptions import JavascriptException
 import time
 import os
 
-def downLoadURl(image_src, img_save_url, keyword, idx):
-    link=np.array()
-    try:
-    except:
-    link=np.append(img.get_attribute('src')
-                   
-        
-    file=("img_list.txt",link)     
-    print("URL 저장"+str(idx))
-    
-    '''
-    file=("img_list.txt","a","UTF-8")
-    file.write(img_src)
-    file.close()
-    '''
+def url_to_image(url):
+    # download the image, convert it to a NumPy array, and then read
+    # it into OpenCV format
+    resp = urllib.request.urlopen(url)
+    image = np.asarray(bytearray(resp.read()), dtype="uint8")
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    # return the image
+    return image
+
+
+def downLoadUrl(url_name):
+    with open('img_list.txt', 'w') as f:
+        for item in url_name:
+            f.write("%s\n" % item)
+
     
 def select(image_src):
-#     img = cv2.imread(image_src)
-#     cv2.imshow('crawled',img)
+    img = url_to_image(image_src)
+    cv2.imshow('crawled',img)
     key = cv2.waitKey(0) & 0xFF 
     if key == ord('d'): # d 누르면 사진 저장 안 함 건너뜀.
         return False;
@@ -40,13 +40,15 @@ def select(image_src):
     
     cv2.destroyAllWindow();
 
+
 def checkDuplicate(url_name, image_src):
     if image_src in url_name:
         print('중복')
-        return True
-    else
-        url_name.append(image_src)
         return False
+    else:
+        url_name.append(image_src)
+        return True
+
 
 def downLoadImage(image_src, img_save_url, keyword, idx):
     # 검색어로 폴더 생성
@@ -73,11 +75,15 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
 
 
 def getImage(keyword, limit):
+
+    # txt 가져오기
     file = open('img_list.txt', 'r')
     url_name = file.readlines()
 
+    print(url_name)
+
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://google.com/search?q=" + keyword + "&tbm=isch"
+    url = "https://www.google.com/search?sa=G&hl=ko&tbs=simg:CAESlAIJgYPO5GpeA_1EaiAILELCMpwgaYQpfCAMSJ-MH1gfxAuQH4geiE98HgQiACFGAPtg0yT2-NMM0vTTcNLs05j2VJxowGn5EtIaKdQKzfscIX7kX2uipNqtuHeFfE64UxgswmpnF-8ponJjXJh2-LlC_1SOp6IAQMCxCOrv4IGgoKCAgBEgSY8YtqDAsQne3BCRqBAQoWCgR3b29k2qWI9gMKCggvbS8wODN2dAoYCgZudW1iZXLapYj2AwoKCC9tLzA1ZndiChUKA2lua9qliPYDCgoIL20vMDN5aGsKGgoGdGlja2V02qWI9gMMCgovbS8wMnB5MzUxChoKB3JlY2VpcHTapYj2AwsKCS9tLzA0Z2NsOQw&sxsrf=ALeKk02tN6a7ee2VYscAuj5EH2-axS-Orw:1585042036739&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%A0%84%ED%91%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&ved=2ahUKEwiS3bbc5bLoAhXCdd4KHQqsCBQQsw56BAgBEAE&biw=1536&bih=722"
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
 
@@ -96,6 +102,7 @@ def getImage(keyword, limit):
     isLastImage = False
     img_save_url = "../test_img/" + keyword
     idx = 1
+    pre_image_src = ""
 
     try:
         # 4. n3VNCb 클래스를 찾을 때 까지 최대 10초 대기
@@ -117,7 +124,7 @@ def getImage(keyword, limit):
             if checkDuplicate(url_name, image_src):
                 return
             #URL 저장
-            downLoadURL(image_src img_save_url, keyword,idx)
+            downLoadUrl(url_name)
             print("*** URL 저장 완료 ***")
 
             # 이미지 저장
@@ -140,15 +147,14 @@ def getImage(keyword, limit):
 
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
-                    
-                    
-                    
+
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
                         isLastImage = True
                         continue
-                    #URL 저장
-                    downLoadURL(image_src img_save_url, keyword,idx)
+                        
+                    # URL 저장
+                    downLoadUrl(url_name)
                     print("*** URL 저장 완료 ***")
 
                     # 이미지 저장
@@ -167,15 +173,11 @@ def getImage(keyword, limit):
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
                         continue
-                    else:
-                        #URL 저장
-                        downLoadURL(image_src img_save_url, keyword,idx)
-                        # 이미지 저장                        pre_image_src = image_src
-                        if (select(image_src)):
-                            # 이미지 저장
-                            downLoadImage(image_src, img_save_url, keyword, idx);
-                       
-                       
+
+                    # image 확인
+                    if select(image_src):
+                        # image 저장
+                        downLoadImage(image_src, img_save_url, keyword, idx)
 
                     if limit == idx:
                         break
@@ -187,11 +189,11 @@ def getImage(keyword, limit):
                     # 변경된 url
                     current_url = browser.current_url
 
-                    # 변경된 url로 재호출
+                    # 변경된 url 로 재호출
                     browser.get(current_url)
                     wait = WebDriverWait(browser, 10)
                     # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
-                    wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
+                    wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
                     big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
 
                     # index 1 증가
@@ -203,5 +205,4 @@ def getImage(keyword, limit):
         print("Time out")
 
 
-getImage("receipt test", 1)
-
+getImage("test1", 10)
