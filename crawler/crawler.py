@@ -14,6 +14,14 @@ import time
 import os
 
 
+def checkDuplicate(url_name, image_src):
+    if image_src in url_name:
+        print('중복')
+        return True
+    else
+        url_name.append(image_src)
+        return False
+
 def downLoadImage(image_src, img_save_url, keyword, idx):
     # 검색어로 폴더 생성
 
@@ -39,12 +47,8 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
 
 
 def getImage(keyword, limit):
-
     file = open('img_list.txt', 'r')
     url_name = file.readlines()
-
-    print(url_name)
-
 
     # 1. 키워드를 넣고 webdriver 실행
     url = "https://google.com/search?q=" + keyword + "&tbm=isch"
@@ -66,7 +70,6 @@ def getImage(keyword, limit):
     isLastImage = False
     img_save_url = "../test_img/" + keyword
     idx = 1
-    pre_image_src = ""
 
     try:
         # 4. n3VNCb 클래스를 찾을 때 까지 최대 10초 대기
@@ -83,6 +86,10 @@ def getImage(keyword, limit):
 
             # img src 가져옴
             image_src = big_image.get_attribute("src")
+
+            # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
+            if checkDuplicate(url_name, image_src):
+                return
 
             # 이미지 저장
             downLoadImage(image_src, img_save_url, keyword, idx)
@@ -105,6 +112,11 @@ def getImage(keyword, limit):
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
 
+                    # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
+                    if checkDuplicate(url_name, image_src):
+                        isLastImage = True
+                        continue
+
                     # 이미지 저장
                     downLoadImage(image_src, img_save_url, keyword, idx)
                     print("*** 이미지 저장 완료 ***")
@@ -117,56 +129,39 @@ def getImage(keyword, limit):
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
                     print(image_src)
-                    if pre_image_src == image_src:
-                        print("*** 중복 src 건너뜀 ***")
 
-                        # pre_image_src = ""
-
-                        # 다음 사진으로 이동
-                        nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
-                        nextImageBtn[1].click()
-
-                        # 변경된 url
-                        current_url_url = browser.current_url
-
-                        # 변경된 url로 재호출
-                        browser.get(current_url)
-                        wait = WebDriverWait(browser, 10)
-                        # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
-                        wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
-                        big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
-
+                    # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
+                    if checkDuplicate(url_name, image_src):
                         continue
                     else:
-                        pre_image_src = image_src
-
                         # 이미지 저장
                         downLoadImage(image_src, img_save_url, keyword, idx)
 
-                        if limit == idx:
-                            break
+                    if limit == idx:
+                        break
 
-                        # 다음 사진으로 이동
-                        nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
-                        nextImageBtn[1].click()
+                    # 다음 사진으로 이동
+                    nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
+                    nextImageBtn[1].click()
 
-                        # 변경된 url
-                        current_url = browser.current_url
+                    # 변경된 url
+                    current_url = browser.current_url
 
-                        # 변경된 url로 재호출
-                        browser.get(current_url)
-                        wait = WebDriverWait(browser, 10)
-                        # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
-                        wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
-                        big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
+                    # 변경된 url로 재호출
+                    browser.get(current_url)
+                    wait = WebDriverWait(browser, 10)
+                    # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
+                    wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
+                    big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
 
-                        # index 1 증가
-                        idx += 1
+                    # index 1 증가
+                    idx += 1
 
             browser.close()
 
     except TimeoutException:
         print("Time out")
+
 
 getImage("receipt test", 1)
 
