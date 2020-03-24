@@ -9,8 +9,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 import numpy as np
 import cv2
-#fsdfdsfsad
-# 제 이름은 김상경입니다. 감사합니다
+#iiiiiiiiiiiiiiiiiiiii
 from selenium.common.exceptions import JavascriptException
 import time
 import os
@@ -18,6 +17,7 @@ import os
 
 def downLoadImage(image_src, img_save_url, keyword, idx):
     # 검색어로 폴더 생성
+
     if not (os.path.isdir(img_save_url)):
         os.mkdir(os.path.join(img_save_url))
 
@@ -40,6 +40,13 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
 
 
 def getImage(keyword, limit):
+
+    file = open('img_list.txt', 'r')
+    url_name = file.readlines()
+
+    print(url_name)
+
+
     # 1. 키워드를 넣고 webdriver 실행
     url = "https://google.com/search?q=" + keyword + "&tbm=isch"
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
@@ -58,7 +65,7 @@ def getImage(keyword, limit):
     browser.get(current_url)
 
     isLastImage = False
-    img_save_url = "test_img/" + keyword
+    img_save_url = "../test_img/" + keyword
     idx = 1
     pre_image_src = ""
 
@@ -229,5 +236,4 @@ def order_point(pts):
 
 # src = cv2.imread('img/adffg.jpg')
 # point('img/adfewr.jpg')
-getImage("영수증", 100)
-## 5works 어깨깡패 전현태 매니저 사진을 키워드에 넣어봤습니다.
+getImage("영수증", 50)## 5works 어깨깡패 전현태 매니저 사진을 키워드에 넣어봤습니다.
