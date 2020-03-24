@@ -44,10 +44,10 @@ def select(image_src):
 def checkDuplicate(url_name, image_src):
     if image_src in url_name:
         print('중복')
-        return True
+        return False
     else:
         url_name.append(image_src)
-        return False
+        return True
 
 
 def downLoadImage(image_src, img_save_url, keyword, idx):
@@ -152,6 +152,7 @@ def getImage(keyword, limit):
                     if checkDuplicate(url_name, image_src):
                         isLastImage = True
                         continue
+                        
                     # URL 저장
                     downLoadUrl(url_name)
                     print("*** URL 저장 완료 ***")
