@@ -13,21 +13,11 @@ from selenium.common.exceptions import JavascriptException
 import time
 import os
 
-def downLoadURl(image_src, img_save_url, keyword, idx):
-    link=np.array()
-    try:
-    except:
-    link=np.append(img.get_attribute('src')
-                   
-        
-    file=("img_list.txt",link)     
-    print("URL 저장"+str(idx))
-    
-    '''
-    file=("img_list.txt","a","UTF-8")
-    file.write(img_src)
-    file.close()
-    '''
+def downLoadUrl(url_name):
+    with open('img_list.txt', 'w') as f:
+        for item in url_name:
+            f.write("%s\n" % item)
+
     
 def select(image_src):
 #     img = cv2.imread(image_src)
@@ -44,7 +34,7 @@ def checkDuplicate(url_name, image_src):
     if image_src in url_name:
         print('중복')
         return True
-    else
+    else:
         url_name.append(image_src)
         return False
 
@@ -117,7 +107,7 @@ def getImage(keyword, limit):
             if checkDuplicate(url_name, image_src):
                 return
             #URL 저장
-            downLoadURL(image_src img_save_url, keyword,idx)
+            downLoadUrl(url_name)
             print("*** URL 저장 완료 ***")
 
             # 이미지 저장
@@ -140,15 +130,13 @@ def getImage(keyword, limit):
 
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
-                    
-                    
-                    
+
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
                         isLastImage = True
                         continue
-                    #URL 저장
-                    downLoadURL(image_src img_save_url, keyword,idx)
+                    # URL 저장
+                    downLoadUrl(url_name)
                     print("*** URL 저장 완료 ***")
 
                     # 이미지 저장
@@ -168,14 +156,11 @@ def getImage(keyword, limit):
                     if checkDuplicate(url_name, image_src):
                         continue
                     else:
-                        #URL 저장
-                        downLoadURL(image_src img_save_url, keyword,idx)
+
                         # 이미지 저장                        pre_image_src = image_src
-                        if (select(image_src)):
+                        if select(image_src):
                             # 이미지 저장
                             downLoadImage(image_src, img_save_url, keyword, idx);
-                       
-                       
 
                     if limit == idx:
                         break
