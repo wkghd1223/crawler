@@ -21,6 +21,13 @@ def url_to_image(url):
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     # return the image
     return image
+
+
+def downLoadUrl(url_name):
+    with open('img_list.txt', 'w') as f:
+        for item in url_name:
+            f.write("%s\n" % item)
+
     
 def select(image_src):
     img = url_to_image(image_src)
@@ -32,6 +39,16 @@ def select(image_src):
         return True;
     
     cv2.destroyAllWindow();
+
+
+def checkDuplicate(url_name, image_src):
+    if image_src in url_name:
+        print('중복')
+        return True
+    else:
+        url_name.append(image_src)
+        return False
+
 
 def downLoadImage(image_src, img_save_url, keyword, idx):
     # 검색어로 폴더 생성
@@ -59,14 +76,14 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
 
 def getImage(keyword, limit):
 
+    # txt 가져오기
     file = open('img_list.txt', 'r')
     url_name = file.readlines()
 
     print(url_name)
 
-
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://google.com/search?q=" + keyword + "&tbm=isch"
+    url = "https://www.google.com/search?sa=G&hl=ko&tbs=simg:CAESlAIJgYPO5GpeA_1EaiAILELCMpwgaYQpfCAMSJ-MH1gfxAuQH4geiE98HgQiACFGAPtg0yT2-NMM0vTTcNLs05j2VJxowGn5EtIaKdQKzfscIX7kX2uipNqtuHeFfE64UxgswmpnF-8ponJjXJh2-LlC_1SOp6IAQMCxCOrv4IGgoKCAgBEgSY8YtqDAsQne3BCRqBAQoWCgR3b29k2qWI9gMKCggvbS8wODN2dAoYCgZudW1iZXLapYj2AwoKCC9tLzA1ZndiChUKA2lua9qliPYDCgoIL20vMDN5aGsKGgoGdGlja2V02qWI9gMMCgovbS8wMnB5MzUxChoKB3JlY2VpcHTapYj2AwsKCS9tLzA0Z2NsOQw&sxsrf=ALeKk02tN6a7ee2VYscAuj5EH2-axS-Orw:1585042036739&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%A0%84%ED%91%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&ved=2ahUKEwiS3bbc5bLoAhXCdd4KHQqsCBQQsw56BAgBEAE&biw=1536&bih=722"
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
 
@@ -107,7 +124,7 @@ def getImage(keyword, limit):
             if checkDuplicate(url_name, image_src):
                 return
             #URL 저장
-            downLoadURL(image_src img_save_url, keyword,idx)
+            downLoadUrl(url_name)
             print("*** URL 저장 완료 ***")
 
             # 이미지 저장
@@ -130,15 +147,13 @@ def getImage(keyword, limit):
 
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
-                    
-                    
-                    
+
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
                         isLastImage = True
                         continue
-                    #URL 저장
-                    downLoadURL(image_src img_save_url, keyword,idx)
+                    # URL 저장
+                    downLoadUrl(url_name)
                     print("*** URL 저장 완료 ***")
 
                     # 이미지 저장
@@ -153,55 +168,35 @@ def getImage(keyword, limit):
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
                     print(image_src)
-                    if pre_image_src == image_src:
-                        print("*** 중복 src 건너뜀 ***")
 
-                        # pre_image_src = ""
-
-                        # 다음 사진으로 이동
-                        nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
-                        nextImageBtn[1].click()
-
-                        # 변경된 url
-                        current_url_url = browser.current_url
-
-                        # 변경된 url로 재호출
-                        browser.get(current_url)
-                        wait = WebDriverWait(browser, 10)
-                        # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
-                        wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
-                        big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
-
+                    # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
+                    if checkDuplicate(url_name, image_src):
                         continue
-                    else:
-                        #URL 저장
-                        downLoadURL(image_src img_save_url, keyword,idx)
-                        # 이미지 저장                        pre_image_src = image_src
-                        if (select(image_src)):
-                            # 이미지 저장
-                            downLoadImage(image_src, img_save_url, keyword, idx);
-                       
-                       
 
-                        if limit == idx:
-                            break
+                    # image 확인
+                    if select(image_src):
+                        # image 저장
+                        downLoadImage(image_src, img_save_url, keyword, idx)
 
-                        # 다음 사진으로 이동
-                        nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
-                        nextImageBtn[1].click()
+                    if limit == idx:
+                        break
 
-                        # 변경된 url
-                        current_url = browser.current_url
+                    # 다음 사진으로 이동
+                    nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
+                    nextImageBtn[1].click()
 
-                        # 변경된 url로 재호출
-                        browser.get(current_url)
-                        wait = WebDriverWait(browser, 10)
-                        # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
-                        wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
-                        big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
+                    # 변경된 url
+                    current_url = browser.current_url
 
-                        # index 1 증가
-                        idx += 1
+                    # 변경된 url 로 재호출
+                    browser.get(current_url)
+                    wait = WebDriverWait(browser, 10)
+                    # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
+                    wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
+                    big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
+
+                    # index 1 증가
+                    idx += 1
 
             browser.close()
 
@@ -209,70 +204,4 @@ def getImage(keyword, limit):
         print("Time out")
 
 
-def point(path_of_img):
-    img = cv2.imread(path_of_img)
-    src = img.copy()
-    # point = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-    size = 800.0
-    r = size / img.shape[0]
-    dim = (int(img.shape[1] * r), int(size))
-    img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (1, 1), 7)
-    edged = cv2.Canny(gray, 75, 200)
-    cv2.imshow("edge", edged)
-    cv2.waitKey(0)
-
-    (cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
-    print(cnts)
-    for c in cnts:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        if len(approx) == 4:
-            screenCnt = approx
-            break
-
-    cv2.drawContours(img, [screenCnt], -1, (0, 255, 0), 2)
-    cv2.imshow("asf", img)
-    cv2.waitKey(0)
-
-    rect = order_point(screenCnt.reshape(4, 2) / r)
-    (topLeft, topRight, bottomRight, bottomLeft) = rect
-
-    v1 = abs(bottomRight[0] - bottomLeft[0])
-    v2 = abs(topRight[0] - topLeft[0])
-    h1 = abs(topRight[1] - bottomRight[1])
-    h2 = abs(topLeft[1] - bottomLeft[1])
-    minWidth = min([v1, v2])
-    minHeight = min([h1, h2])
-
-    dst = np.float32([[0, 0], [minWidth - 1, 0], [minWidth - 1, minHeight - 1], [0, minHeight - 1]])
-
-    N = cv2.getPerspectiveTransform(rect, dst)
-
-    warped = cv2.warpPerspective(img, N, (int(minWidth), int(minHeight)))
-
-    cv2.imshow("asdff", warped)
-    cv2.waitKey(0)
-
-
-def order_point(pts):
-    rect = np.zeros((4, 2), dtype="float32")
-    s = pts.sum(axis=1)
-
-    rect[0] = pts[np.argmin(s)]
-    rect[2] = pts[np.argmax(s)]
-
-    diff = np.diff(pts, axis=1)
-    rect[1] = pts[np.argmin(diff)]
-    rect[3] = pts[np.argmax(diff)]
-
-    return rect
-
-
-# src = cv2.imread('img/adffg.jpg')
-# point('img/adfewr.jpg')
-getImage("대한민국", 10)
+getImage("test1", 10)
