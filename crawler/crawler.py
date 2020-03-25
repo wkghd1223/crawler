@@ -1,5 +1,5 @@
 import urllib.request
-from urllib.request import HTTPError, URLError
+# from urllib.request import HTTPError, URLError
 import http.client
 from concurrent.futures import TimeoutError
 from selenium import webdriver
@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import numpy as np
 import cv2
 from selenium.common.exceptions import JavascriptException
@@ -82,33 +83,40 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
 
 # yes && no의 각각의 인덱스 저장 필수
 def saveYesOrNo(yes, no):
-    if not (os.path.isdir('yesorno.txt')):
-        os.mkdir(os.path.join('yesorno.txt'))
-    file = open('yesorno.txt', 'w')
-    line = [yes, no]
-    file.writelines(line)
-    file.close()
+    line = [str(yes), str(no)]
+    # if not (os.path.isdir('yesorno.txt')):
+    #     os.mkdir(os.path.join('yesorno.txt'))
+    with open('yesorno.txt', 'w') as f:
+        for item in line:
+            f.write("%s\n" % item)
+        f.close()
 
 
 def getImage(keyword, limit):
 
     # txt 가져오기
-    if not os.path.isdir('/img_list.txt'):
-        os.mkdir(os.path.join('img_list.txt'))
+    # if not os.path.isdir('/img_list.txt'):
+    #     os.mkdir(os.path.join('img_list.txt'))
     file = open('img_list.txt', 'r')
     url_name = file.readlines()
     file.close()
-
+    i = 0
+    while i < len(url_name):
+        url_name[i] = url_name[i].strip()
+        i += 1
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://www.google.com/search?sa=G&hl=ko&tbs=simg:CAESlAIJgYPO5GpeA_1EaiAILELCMpwgaYQpfCAMSJ-MH1gfxAuQH4geiE98HgQiACFGAPtg0yT2-NMM0vTTcNLs05j2VJxowGn5EtIaKdQKzfscIX7kX2uipNqtuHeFfE64UxgswmpnF-8ponJjXJh2-LlC_1SOp6IAQMCxCOrv4IGgoKCAgBEgSY8YtqDAsQne3BCRqBAQoWCgR3b29k2qWI9gMKCggvbS8wODN2dAoYCgZudW1iZXLapYj2AwoKCC9tLzA1ZndiChUKA2lua9qliPYDCgoIL20vMDN5aGsKGgoGdGlja2V02qWI9gMMCgovbS8wMnB5MzUxChoKB3JlY2VpcHTapYj2AwsKCS9tLzA0Z2NsOQw&sxsrf=ALeKk02tN6a7ee2VYscAuj5EH2-axS-Orw:1585042036739&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%A0%84%ED%91%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&ved=2ahUKEwiS3bbc5bLoAhXCdd4KHQqsCBQQsw56BAgBEAE&biw=1536&bih=722"
+    url = "https://www.google.com/search?q=%EC%98%81%EC%88%98%EC%A6%9D&sxsrf=ALeKk03TCVKf5YT9p5kJ3E6xtalB52-GNQ:1585111219768&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiT6ru557ToAhWKUN4KHTUvAKoQ_AUoAXoECAwQAw&biw=962&bih=713&dpr=1"
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
 
+    wait = WebDriverWait(browser, 10)
     # 2. 구글 검색의 작은 이미지들의 공통 클래스를 찾음
-    small_images = browser.find_elements_by_class_name("rg_i")
+    small_images = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'rg_i')))
+    small_images.click()
+    # small_images = browser.find_elements_by_class_name("rg_i")
 
     # 3. 작은 이미지를 한번 클릭하여 우측에 상세창 (큰이미지)을 호출 -> url 변경됨
-    small_images[0].click()
+    # small_images[0].click()
 
     # 3-1. 변경된 url
     current_url = browser.current_url
@@ -164,16 +172,16 @@ def getImage(keyword, limit):
                     noIdx += 1
 
             # URL 저장
-            downLoadUrl(url_name, yesIdx)
+            downLoadUrl(url_name, yesIdx, noIdx)
             print("*** URL 저장 완료 ***")
 
         else:
             # 마지막 이미지가 아닐 때 반복
             while not isLastImage:
-                if yesIdx == 1 & noIdx == 1:
-                    next_arrow_class = "CIF8af"
-                else:
-                    next_arrow_class = "gvi3cf"
+                # if yesIdx & noIdx:
+                #     next_arrow_class = "CIF8af"
+                # else:
+                next_arrow_class = "gvi3cf"
 
                 # 마지막 이미지인지 클래스로 판별 (마지막 이미지의 오른쪽 화살표 클래스 확인)
                 last_image = browser.find_elements_by_css_selector(".gvi3cf.RDPZE")
@@ -201,7 +209,7 @@ def getImage(keyword, limit):
 
                     isLastImage = True
                     # URL 저장
-                    downLoadUrl(url_name, yesIdx)
+                    downLoadUrl(url_name, yesIdx, noIdx)
                     print("*** URL 저장 완료 ***")
                     # 마지막 이미지가 아닐 때
 
@@ -225,18 +233,22 @@ def getImage(keyword, limit):
                             downLoadImage(image_src, img_no_url, keyword, noIdx)
                             noIdx += 1
                         if limit == yesIdx:
+                            downLoadUrl(url_name, yesIdx, noIdx)
+                            print("*** URL 저장 완료 ***")
                             break
 
                     # 다음 사진으로 이동
+                    # aaa = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, next_arrow_class)))
+
                     nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
-                    nextImageBtn[1].click()
+                    browser.execute_script("arguments[0].click();", nextImageBtn[1])
 
                     # 변경된 url
                     current_url = browser.current_url
 
                     # 변경된 url 로 재호출
                     browser.get(current_url)
-                    wait = WebDriverWait(browser, 10)
+                    # wait = WebDriverWait(browser, 10)
                     # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
                     wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
                     big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
@@ -248,4 +260,4 @@ def getImage(keyword, limit):
         print("Time out")
 
 
-getImage("test1", 10)
+getImage("test1", 3)
