@@ -2,6 +2,7 @@
 .idea
 img/*.jpg
 crawler/img_list.txt
+crawler/img_list/*.txt
 test_img/*jpg
 test_img/**/*jpg
 .DS_Store
