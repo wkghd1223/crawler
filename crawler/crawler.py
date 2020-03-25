@@ -13,6 +13,8 @@ from selenium.common.exceptions import JavascriptException
 import time
 import os
 
+
+# url을 통해 mat형태의 이미지를 만들어내는 함수
 def url_to_image(url):
     # download the image, convert it to a NumPy array, and then read
     # it into OpenCV format
@@ -23,31 +25,35 @@ def url_to_image(url):
     return image
 
 
-def downLoadUrl(url_name):
+# url_name 배열을 통해 파일에 write한다.
+def downLoadUrl(url_name, yesIdx, noIdx):
     with open('img_list.txt', 'w') as f:
         for item in url_name:
             f.write("%s\n" % item)
+        f.close()
+    saveYesOrNo(yesIdx, noIdx)
 
-    
+
+# url_to_image()를 통해 이미지를 가져오고 보여준다.
+# 그 후 저장한다.
 def select(image_src):
     img = url_to_image(image_src)
-    cv2.imshow('crawled',img)
+    cv2.imshow('crawled', img)
     key = cv2.waitKey(0) & 0xFF 
     if key == ord('d'): # d 누르면 사진 저장 안 함 건너뜀.
         return False;
     else: # d 제외 아무 키나 누르면 저장 후 넘어감.
         return True;
-    
-    cv2.destroyAllWindow();
 
 
+# url_name[] 리스트에 image_src url이 있다면 false를 리턴한다.
 def checkDuplicate(url_name, image_src):
     if image_src in url_name:
         print('중복')
-        return False
+        return True
     else:
         url_name.append(image_src)
-        return True
+        return False
 
 
 def downLoadImage(image_src, img_save_url, keyword, idx):
@@ -74,13 +80,24 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
         print(e)
 
 
+# yes && no의 각각의 인덱스 저장 필수
+def saveYesOrNo(yes, no):
+    if not (os.path.isdir('yesorno.txt')):
+        os.mkdir(os.path.join('yesorno.txt'))
+    file = open('yesorno.txt', 'w')
+    line = [yes, no]
+    file.writelines(line)
+    file.close()
+
+
 def getImage(keyword, limit):
 
     # txt 가져오기
+    if not os.path.isdir('/img_list.txt'):
+        os.mkdir(os.path.join('img_list.txt'))
     file = open('img_list.txt', 'r')
     url_name = file.readlines()
-
-    print(url_name)
+    file.close()
 
     # 1. 키워드를 넣고 webdriver 실행
     url = "https://www.google.com/search?sa=G&hl=ko&tbs=simg:CAESlAIJgYPO5GpeA_1EaiAILELCMpwgaYQpfCAMSJ-MH1gfxAuQH4geiE98HgQiACFGAPtg0yT2-NMM0vTTcNLs05j2VJxowGn5EtIaKdQKzfscIX7kX2uipNqtuHeFfE64UxgswmpnF-8ponJjXJh2-LlC_1SOp6IAQMCxCOrv4IGgoKCAgBEgSY8YtqDAsQne3BCRqBAQoWCgR3b29k2qWI9gMKCggvbS8wODN2dAoYCgZudW1iZXLapYj2AwoKCC9tLzA1ZndiChUKA2lua9qliPYDCgoIL20vMDN5aGsKGgoGdGlja2V02qWI9gMMCgovbS8wMnB5MzUxChoKB3JlY2VpcHTapYj2AwsKCS9tLzA0Z2NsOQw&sxsrf=ALeKk02tN6a7ee2VYscAuj5EH2-axS-Orw:1585042036739&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%A0%84%ED%91%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&ved=2ahUKEwiS3bbc5bLoAhXCdd4KHQqsCBQQsw56BAgBEAE&biw=1536&bih=722"
@@ -100,15 +117,27 @@ def getImage(keyword, limit):
     browser.get(current_url)
 
     isLastImage = False
-    img_save_url = "../test_img/" + keyword
-    idx = 1
-    pre_image_src = ""
+    img_yes_url = "../test_img/yes"
+    img_no_url = "../test_img/no"
+    # yesIdx = 1
+    # noIdx = 1
+
+    # txt 가져오기
+    if not (os.path.isdir('yesorno.txt')):
+        yesIdx = 1
+        noIdx = 1
+    else:
+        file = open('yesorno.txt', 'r')
+        line = file.readlines()
+        yesIdx = int(line[0])
+        noIdx = int(line[1])
+        file.close()
 
     try:
         # 4. n3VNCb 클래스를 찾을 때 까지 최대 10초 대기
         wait = WebDriverWait(browser, 10)
         # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
-        wait.until(lambda browser: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
+        wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
         big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
 
         # 마지막 사진인지 클래스를 찾음
@@ -122,19 +151,26 @@ def getImage(keyword, limit):
 
             # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
             if checkDuplicate(url_name, image_src):
-                return
-            #URL 저장
-            downLoadUrl(url_name)
-            print("*** URL 저장 완료 ***")
+                None
+            else:
+                if select(image_src):
+                    # 이미지 저장
+                    downLoadImage(image_src, img_yes_url, keyword, yesIdx)
+                    print("*** 이미지 저장 완료 ***")
+                    yesIdx += 1
+                else:
+                    # image 저장
+                    downLoadImage(image_src, img_no_url, keyword, noIdx)
+                    noIdx += 1
 
-            # 이미지 저장
-            downLoadImage(image_src, img_save_url, keyword, idx)
-            print("*** 이미지 저장 완료 ***")
+            # URL 저장
+            downLoadUrl(url_name, yesIdx)
+            print("*** URL 저장 완료 ***")
 
         else:
             # 마지막 이미지가 아닐 때 반복
-            while isLastImage == False:
-                if idx == 1:
+            while not isLastImage:
+                if yesIdx == 1 & noIdx == 1:
                     next_arrow_class = "CIF8af"
                 else:
                     next_arrow_class = "gvi3cf"
@@ -150,37 +186,46 @@ def getImage(keyword, limit):
 
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
-                        isLastImage = True
-                        continue
-                        
-                    # URL 저장
-                    downLoadUrl(url_name)
-                    print("*** URL 저장 완료 ***")
+                        None
 
-                    # 이미지 저장
-                    downLoadImage(image_src, img_save_url, keyword, idx)
-                    print("*** 이미지 저장 완료 ***")
+                    else:
+                        if select(image_src):
+                            # 이미지 저장
+                            downLoadImage(image_src, img_yes_url, keyword, yesIdx)
+                            print("*** 이미지 저장 완료 ***")
+                            yesIdx += 1
+                        else:
+                            # image 저장
+                            downLoadImage(image_src, img_no_url, keyword, noIdx)
+                            noIdx += 1
 
                     isLastImage = True
-
-                else:
+                    # URL 저장
+                    downLoadUrl(url_name, yesIdx)
+                    print("*** URL 저장 완료 ***")
                     # 마지막 이미지가 아닐 때
 
+                # 마지막 이미지가 아닐 때
+                else:
                     # img src 가져옴
                     image_src = big_image.get_attribute("src")
                     print(image_src)
 
                     # url_name 배열에 image_src 있는 지 확인 및 아니라면 url_name 배열에 추가
                     if checkDuplicate(url_name, image_src):
-                        continue
-
-                    # image 확인
-                    if select(image_src):
-                        # image 저장
-                        downLoadImage(image_src, img_save_url, keyword, idx)
-
-                    if limit == idx:
-                        break
+                        None
+                    else:
+                        # image 확인
+                        if select(image_src):
+                            # image 저장
+                            downLoadImage(image_src, img_yes_url, keyword, yesIdx)
+                            yesIdx += 1
+                        else:
+                            # image 저장
+                            downLoadImage(image_src, img_no_url, keyword, noIdx)
+                            noIdx += 1
+                        if limit == yesIdx:
+                            break
 
                     # 다음 사진으로 이동
                     nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
@@ -196,9 +241,7 @@ def getImage(keyword, limit):
                     wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
                     big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
 
-                    # index 1 증가
-                    idx += 1
-
+            print(url_name)
             browser.close()
 
     except TimeoutException:
