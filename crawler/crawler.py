@@ -20,11 +20,14 @@ import os
 def url_to_image(url):
     # download the image, convert it to a NumPy array, and then read
     # it into OpenCV format
-    resp = urllib.request.urlopen(url)
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    # return the image
-    return image
+    try:
+        resp = urllib.request.urlopen(url)
+        image = np.asarray(bytearray(resp.read()), dtype="uint8")
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        # return the image
+        return image
+    except HTTPError as e:
+        return np.zeros(shape=[512, 512, 3], dtype=np.uint8)
 
 
 # url_name 배열을 통해 파일에 write한다.
@@ -33,7 +36,6 @@ def downLoadUrl(url_name, yesIdx, noIdx):
         for item in url_name:
             f.write("%s\n" % item)
         f.close()
-#     saveYesOrNo(yesIdx, noIdx)
 
 
 def downLoadLog(url_name):
@@ -48,17 +50,20 @@ def downLoadLog(url_name):
 # 그 후 저장한다.
 def select(image_src):
     img = url_to_image(image_src)
+    # diff = cv2.subtract(img, np.zeros(shape=[512, 512, 3], dtype=np.uint8))
+    # if diff == [0, 0, 0]:
+    #     return 'e'
     cv2.imshow('crawled', img)
     while True:
         key = cv2.waitKey(0) & 0xFF
-        # n 누르면 사진 저장 안 함 건너뜀.
         if key == ord('n') or key == ord('N'):
             return 'n'
-        # y 누르면 사진 저장 후 건너뜀.
         elif key == ord('y') or key == ord('Y'):
             return 'y'
         elif key == ord('q') or key == ord('Q'):
             return 'q'
+        elif key == ord('e') or key == ord('e'):
+            return 'e'
         else:
             print('f, y, q 중 하나 선택')
 
@@ -74,7 +79,7 @@ def checkDuplicate(url_name, image_src):
 
 
 def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx):
-    if YN == 'y':
+    if YN == 'Y':
         idx = yesIdx
     else:
         idx = noIdx
@@ -91,7 +96,7 @@ def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx)
 
         downLoadUrl(url_name, yesIdx, noIdx)
 
-        temp = YN + str(idx) + "|" +image_src
+        temp = YN + str(idx) + "|" + image_src
         downLoadLog(temp)
 
     except HTTPError as e:
@@ -110,27 +115,26 @@ def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx)
 
 # 삭제 예정
 # yes && no의 각각의 인덱스 업데이트
-def upDate_Idx_(src_to_idx): # test_img  디렉토리의 주소를 받는다.
+def upDate_Idx_(src_to_idx):  # test_img  디렉토리의 주소를 받는다.
     yes_idx = next_Index(src_to_idx + r"\yes")
     no_idx = next_Index(src_to_idx + r"\no")
-    
+
     line = [yes_idx, no_idx]
     with open('yesorno.txt', 'w') as f:
         for item in line:
             f.write("%s\n" % item)
         f.close()
-        
-        
+
+
 # yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환        
-def next_Index(path): 
+def next_Index(path):
     file_list = os.listdir(path)
-    file_list_jpg= [file for file in file_list if file.endswith(".jpg")]
+    file_list_jpg = [file for file in file_list if file.endswith(".jpg")]
     matching = [s for s in file_list_jpg]
     return len(matching)
 
 
 def getImage():
-
     # txt 가져오기
     if not os.path.exists('img_list.txt'):
         url_name = []
@@ -166,22 +170,8 @@ def getImage():
 
     img_yes_url = r"..\test_img\yes"
     img_no_url = r"..\test_img\no"
-    # yesIdx = 1
-    # noIdx = 1
-
-    # txt 가져오기
-#     if not os.path.exists('yesorno.txt'):
-#         yesIdx = 0
-#         noIdx = 0
-#     else:
-#         file = open('yesorno.txt', 'r')
-#         line = file.readlines()
-#         yesIdx = int(line[0])
-#         noIdx = int(line[1])
-#         file.close()
     yesIdx = next_Index(img_yes_url)
     noIdx = next_Index(img_no_url)
-    
 
     try:
         # 4. n3VNCb 클래스를 찾을 때 까지 최대 10초 대기
@@ -203,15 +193,19 @@ def getImage():
             if checkDuplicate(url_name, image_src):
                 None
             else:
-                if select(image_src) == 'y':
+                c = select(image_src)
+                if c == 'y':
                     # 이미지 저장
                     downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
-                    print("*** 이미지 저장 완료 ***")
+                    print("*** 영수증 이미지 저장 완료 ***")
                     yesIdx += 1
-                elif select(image_src) == 'n':
+                elif c == 'n':
                     # image 저장
-                    downLoadImage(url_name, 'N', image_src, img_yes_url, 'not_receipt', yesIdx, noIdx)
+                    print("*** 영수증아닌 이미지 저장 완료 ***")
+                    downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx)
                     noIdx += 1
+                elif c == 'e':
+                    print("err")
                 else:
                     print('종료합니다.')
 
@@ -237,15 +231,19 @@ def getImage():
                         None
 
                     else:
-                        if select(image_src) == 'y':
+                        c = select(image_src)
+                        if c == 'y':
                             # 이미지 저장
                             downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
-                            print("*** 이미지 저장 완료 ***")
+                            print("*** 영수증 이미지 저장 완료 ***")
                             yesIdx += 1
-                        elif select(image_src) == 'n':
+                        elif c == 'n':
                             # image 저장
-                            downLoadImage(url_name, 'N', image_src, img_yes_url, 'not_receipt', yesIdx, noIdx)
+                            print("*** 영수증아닌 이미지 저장 완료 ***")
+                            downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx)
                             noIdx += 1
+                        elif c == 'e':
+                            print('err')
                         else:
                             print('종료')
 
@@ -260,19 +258,22 @@ def getImage():
                         None
                     else:
                         # image 확인
-                        if select(image_src) == 'y':
+                        c = select(image_src)
+                        if c == 'y':
                             # image 저장
                             downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
-                            print("*** 이미지 저장 완료 ***")
+                            print("*** 영수증 이미지 저장 완료 ***")
                             yesIdx += 1
-                        elif select(image_src) == 'n':
+                        elif c == 'n':
                             # image 저장
-                            downLoadImage(url_name, 'N', image_src, img_yes_url, 'not_receipt', yesIdx, noIdx)
+                            print("*** 영수증아닌 이미지 저장 완료 ***")
+                            downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx)
                             noIdx += 1
+                        elif c == 'e':
+                            print('err')
                         else:
                             print('종료')
                             break
-
 
                     # 다음 사진으로 이동
                     nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
