@@ -48,7 +48,9 @@ def downLoadLog(url_name):
 # 그 후 저장한다.
 def select(image_src):
     img = url_to_image(image_src)
-    cv2.imshow('crawled', img)
+    resize_img = cv2.resize(img, (1000, 1000))
+#     cv2.imshow('crawled', img)
+    cv2.imshow('crawled', resize_img)
     while True:
         key = cv2.waitKey(0) & 0xFF
         # n 누르면 사진 저장 안 함 건너뜀.
