@@ -28,15 +28,20 @@ def url_to_image(url):
 
 
 # url_name 배열을 통해 파일에 write한다.
-def downLoadUrl(url_name, img_save_url, keyword, idx, yesIdx, noIdx):
+def downLoadUrl(url_name, yesIdx, noIdx):
     with open('img_list.txt', 'w') as f:
         for item in url_name:
-            time_now=datetime.datetime.now()
-            time_now=time_now.strftime("[%Y.%m.%d %H:%M:%S]")
-            name=img_save_url+"/"+keyword+str(idx)
-            f.write("%s %s %s\n" %time_now %name % item)
-        f.close()     
+            f.write("%s\n" % item)
+        f.close()
     saveYesOrNo(yesIdx, noIdx)
+
+
+def downLoadLog(url_name):
+    with open('log', 'a') as f:
+        time_now = datetime.datetime.now()
+        time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
+        f.write("%s %s\n" % (time_now, url_name))
+        f.close()
 
 
 # url_to_image()를 통해 이미지를 가져오고 보여준다.
@@ -68,7 +73,12 @@ def checkDuplicate(url_name, image_src):
         return False
 
 
-def downLoadImage(image_src, img_save_url, keyword, idx):
+def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx):
+    if YN == 'y':
+        idx = yesIdx
+    else:
+        idx = noIdx
+
     # 검색어로 폴더 생성
 
     if not (os.path.isdir(img_save_url)):
@@ -78,6 +88,12 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
     try:
         urllib.request.urlretrieve(image_src, img_save_url + "/" + keyword + "-" + str(idx) + ".jpg")
         print("이미지 저장 " + str(idx + 1))
+
+        downLoadUrl(url_name, yesIdx, noIdx)
+
+        temp = YN + str(idx) + "|" +image_src
+        downLoadLog(temp)
+
     except HTTPError as e:
         print("*** " + str(idx) + "번 째 사진 저장 중 에러 : ")
         print(e)
@@ -175,19 +191,15 @@ def getImage():
             else:
                 if select(image_src) == 'y':
                     # 이미지 저장
-                    downLoadImage(image_src, img_yes_url, 'receipt', yesIdx)
+                    downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
                     print("*** 이미지 저장 완료 ***")
                     yesIdx += 1
                 elif select(image_src) == 'n':
                     # image 저장
-                    downLoadImage(image_src, img_no_url, 'not_receipt', noIdx)
+                    downLoadImage(url_name, 'N', image_src, img_yes_url, 'not_receipt', yesIdx, noIdx)
                     noIdx += 1
                 else:
                     print('종료합니다.')
-
-            # URL 저장
-            downLoadUrl(url_name, yesIdx, noIdx)
-            print("*** URL 저장 완료 ***")
 
         else:
             # 마지막 이미지가 아닐 때 반복
@@ -213,20 +225,15 @@ def getImage():
                     else:
                         if select(image_src) == 'y':
                             # 이미지 저장
-                            downLoadImage(image_src, img_yes_url, 'receipt', yesIdx)
+                            downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
                             print("*** 이미지 저장 완료 ***")
                             yesIdx += 1
                         elif select(image_src) == 'n':
                             # image 저장
-                            downLoadImage(image_src, img_no_url, 'not_receipt', noIdx)
+                            downLoadImage(url_name, 'N', image_src, img_yes_url, 'not_receipt', yesIdx, noIdx)
                             noIdx += 1
                         else:
                             print('종료')
-
-                    # URL 저장
-                    downLoadUrl(url_name, yesIdx, noIdx)
-                    print("*** URL 저장 완료 ***")
-                    # 마지막 이미지가 아닐 때
 
                 # 마지막 이미지가 아닐 때
                 else:
@@ -241,15 +248,15 @@ def getImage():
                         # image 확인
                         if select(image_src) == 'y':
                             # image 저장
-                            downLoadImage(image_src, img_yes_url, 'receipt', yesIdx)
+                            downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
+                            print("*** 이미지 저장 완료 ***")
                             yesIdx += 1
                         elif select(image_src) == 'n':
                             # image 저장
-                            downLoadImage(image_src, img_no_url, 'not_receipt', noIdx)
+                            downLoadImage(url_name, 'N', image_src, img_yes_url, 'not_receipt', yesIdx, noIdx)
                             noIdx += 1
                         else:
                             print('종료')
-                            downLoadUrl(url_name, yesIdx, noIdx)
                             break
 
 
@@ -273,4 +280,4 @@ def getImage():
         print("Time out")
 
 
-getImage("test1", 3)
+getImage()
