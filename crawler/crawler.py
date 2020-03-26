@@ -1,5 +1,5 @@
 import urllib.request
-# from urllib.request import HTTPError, URLError
+from urllib.request import HTTPError, URLError
 import http.client
 from concurrent.futures import TimeoutError
 from selenium import webdriver
@@ -66,7 +66,7 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
     # 이미지 저장
     try:
         urllib.request.urlretrieve(image_src, img_save_url + "/" + keyword + "-" + str(idx) + ".jpg")
-        print("이미지 저장 " + str(idx))
+        print("이미지 저장 " + str(idx + 1))
     except HTTPError as e:
         print("*** " + str(idx) + "번 째 사진 저장 중 에러 : ")
         print(e)
@@ -95,15 +95,17 @@ def saveYesOrNo(yes, no):
 def getImage(keyword, limit):
 
     # txt 가져오기
-    # if not os.path.isdir('/img_list.txt'):
-    #     os.mkdir(os.path.join('img_list.txt'))
-    file = open('img_list.txt', 'r')
-    url_name = file.readlines()
-    file.close()
-    i = 0
-    while i < len(url_name):
-        url_name[i] = url_name[i].strip()
-        i += 1
+    if not os.path.exists('img_list.txt'):
+        url_name = []
+    else:
+        file = open('img_list.txt', 'r')
+        url_name = file.readlines()
+        file.close()
+        i = 0
+        while i < len(url_name):
+            url_name[i] = url_name[i].strip()
+            i += 1
+
     # 1. 키워드를 넣고 webdriver 실행
     url = "https://www.google.com/search?q=%EC%98%81%EC%88%98%EC%A6%9D&sxsrf=ALeKk03TCVKf5YT9p5kJ3E6xtalB52-GNQ:1585111219768&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiT6ru557ToAhWKUN4KHTUvAKoQ_AUoAXoECAwQAw&biw=962&bih=713&dpr=1"
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
@@ -131,9 +133,9 @@ def getImage(keyword, limit):
     # noIdx = 1
 
     # txt 가져오기
-    if not (os.path.isdir('yesorno.txt')):
-        yesIdx = 1
-        noIdx = 1
+    if not os.path.exists('yesorno.txt'):
+        yesIdx = 0
+        noIdx = 0
     else:
         file = open('yesorno.txt', 'r')
         line = file.readlines()
