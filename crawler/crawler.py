@@ -12,6 +12,7 @@ import numpy as np
 import cv2
 from selenium.common.exceptions import JavascriptException
 import time
+import datetime
 import os
 
 
@@ -27,11 +28,14 @@ def url_to_image(url):
 
 
 # url_name 배열을 통해 파일에 write한다.
-def downLoadUrl(url_name, yesIdx, noIdx):
+def downLoadUrl(url_name, img_save_url, keyword, idx, yesIdx, noIdx):
     with open('img_list.txt', 'w') as f:
         for item in url_name:
-            f.write("%s\n" % item)
-        f.close()
+            time_now=datetime.datetime.now()
+            time_now=time_now.strftime("[%Y.%m.%d %H:%M:%S]")
+            name=img_save_url+"/"+keyword+str(idx)
+            f.write("%s %s %s\n" %time_now %name % item)
+        f.close()     
     saveYesOrNo(yesIdx, noIdx)
 
 
@@ -269,4 +273,4 @@ def getImage():
         print("Time out")
 
 
-getImage()
+getImage("test1", 3)
