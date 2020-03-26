@@ -53,7 +53,10 @@ def select(image_src):
     # diff = cv2.subtract(img, np.zeros(shape=[512, 512, 3], dtype=np.uint8))
     # if diff == [0, 0, 0]:
     #     return 'e'
-    resize_img = cv2.resize(img, (1000, 1000))
+    try:
+        resize_img = cv2.resize(img, (1000, 1000))
+    except cv2.error as e:
+        resize_img = np.zeros(shape=[512, 512, 3], dtype=np.uint8)
 #     cv2.imshow('crawled', img)
     cv2.imshow('crawled', resize_img)
     while True:
@@ -74,6 +77,8 @@ def select(image_src):
 def checkDuplicate(url_name, image_src):
     if image_src in url_name:
         print('중복')
+        return True
+    elif ('.gif' in image_src ):
         return True
     else:
         url_name.append(image_src)
@@ -150,7 +155,7 @@ def getImage():
             i += 1
 
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://www.google.com/search?q=%EC%98%81%EC%88%98%EC%A6%9D&sxsrf=ALeKk03TCVKf5YT9p5kJ3E6xtalB52-GNQ:1585111219768&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiT6ru557ToAhWKUN4KHTUvAKoQ_AUoAXoECAwQAw&biw=962&bih=713&dpr=1"
+    url = "https://www.google.com/search?sa=G&hl=ko&tbs=simg:CAESlAIJgYPO5GpeA_1EaiAILELCMpwgaYQpfCAMSJ-MH1gfxAuQH4geiE98HgQiACFGAPtg0yT2-NMM0vTTcNLs05j2VJxowGn5EtIaKdQKzfscIX7kX2uipNqtuHeFfE64UxgswmpnF-8ponJjXJh2-LlC_1SOp6IAQMCxCOrv4IGgoKCAgBEgSY8YtqDAsQne3BCRqBAQoWCgR3b29k2qWI9gMKCggvbS8wODN2dAoYCgZudW1iZXLapYj2AwoKCC9tLzA1ZndiChoKB3JlY2VpcHTapYj2AwsKCS9tLzA0Z2NsOQoVCgNpbmvapYj2AwoKCC9tLzAzeWhrChoKBnRpY2tldNqliPYDDAoKL20vMDJweTM1MQw&sxsrf=ALeKk029eKRhlm5JuObHlCK-HYooJ0lCWQ:1585212710445&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%A0%84%ED%91%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&ved=2ahUKEwjmjP_D4bfoAhWLad4KHYatBoEQsw56BAgBEAE&biw=1920&bih=936"
     # 상대경로 또는 txt파일 읽기
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
