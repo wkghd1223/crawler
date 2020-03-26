@@ -262,4 +262,4 @@ def getImage(keyword, limit):
         print("Time out")
 
 
-getImage("test1", 3)
+getImage("test1", 10)
