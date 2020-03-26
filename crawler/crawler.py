@@ -40,11 +40,18 @@ def downLoadUrl(url_name, yesIdx, noIdx):
 def select(image_src):
     img = url_to_image(image_src)
     cv2.imshow('crawled', img)
-    key = cv2.waitKey(0) & 0xFF 
-    if key == ord('d'): # d 누르면 사진 저장 안 함 건너뜀.
-        return False;
-    else: # d 제외 아무 키나 누르면 저장 후 넘어감.
-        return True;
+    while True:
+        key = cv2.waitKey(0) & 0xFF
+        # d 누르면 사진 저장 안 함 건너뜀.
+        if key == ord('n') or key == ord('N'):
+            return 'n'
+        # d 제외 아무 키나 누르면 저장 후 넘어감.
+        elif key == ord('y') or key == ord('Y'):
+            return 'y'
+        elif key == ord('q') or key == ord('Q'):
+            return 'q'
+        else:
+            print('f, y, q 중 하나 선택')
 
 
 # url_name[] 리스트에 image_src url이 있다면 false를 리턴한다.
@@ -81,18 +88,17 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
         print(e)
 
 
+# 삭제 예정
 # yes && no의 각각의 인덱스 저장 필수
 def saveYesOrNo(yes, no):
     line = [str(yes), str(no)]
-    # if not (os.path.isdir('yesorno.txt')):
-    #     os.mkdir(os.path.join('yesorno.txt'))
     with open('yesorno.txt', 'w') as f:
         for item in line:
             f.write("%s\n" % item)
         f.close()
 
 
-def getImage(keyword, limit):
+def getImage():
 
     # txt 가져오기
     if not os.path.exists('img_list.txt'):
@@ -108,6 +114,7 @@ def getImage(keyword, limit):
 
     # 1. 키워드를 넣고 webdriver 실행
     url = "https://www.google.com/search?q=%EC%98%81%EC%88%98%EC%A6%9D&sxsrf=ALeKk03TCVKf5YT9p5kJ3E6xtalB52-GNQ:1585111219768&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiT6ru557ToAhWKUN4KHTUvAKoQ_AUoAXoECAwQAw&biw=962&bih=713&dpr=1"
+    # 상대경로 또는 txt파일 읽기
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
 
@@ -126,7 +133,6 @@ def getImage(keyword, limit):
     # 3-2. 변경된 url로 재호출
     browser.get(current_url)
 
-    isLastImage = False
     img_yes_url = "../test_img/yes"
     img_no_url = "../test_img/no"
     # yesIdx = 1
@@ -163,15 +169,17 @@ def getImage(keyword, limit):
             if checkDuplicate(url_name, image_src):
                 None
             else:
-                if select(image_src):
+                if select(image_src) == 'y':
                     # 이미지 저장
-                    downLoadImage(image_src, img_yes_url, keyword, yesIdx)
+                    downLoadImage(image_src, img_yes_url, 'receipt', yesIdx)
                     print("*** 이미지 저장 완료 ***")
                     yesIdx += 1
-                else:
+                elif select(image_src) == 'n':
                     # image 저장
-                    downLoadImage(image_src, img_no_url, keyword, noIdx)
+                    downLoadImage(image_src, img_no_url, 'not_receipt', noIdx)
                     noIdx += 1
+                else:
+                    print('종료합니다.')
 
             # URL 저장
             downLoadUrl(url_name, yesIdx, noIdx)
@@ -179,7 +187,7 @@ def getImage(keyword, limit):
 
         else:
             # 마지막 이미지가 아닐 때 반복
-            while not isLastImage:
+            while True:
                 # if yesIdx & noIdx:
                 #     next_arrow_class = "CIF8af"
                 # else:
@@ -199,17 +207,18 @@ def getImage(keyword, limit):
                         None
 
                     else:
-                        if select(image_src):
+                        if select(image_src) == 'y':
                             # 이미지 저장
-                            downLoadImage(image_src, img_yes_url, keyword, yesIdx)
+                            downLoadImage(image_src, img_yes_url, 'receipt', yesIdx)
                             print("*** 이미지 저장 완료 ***")
                             yesIdx += 1
-                        else:
+                        elif select(image_src) == 'n':
                             # image 저장
-                            downLoadImage(image_src, img_no_url, keyword, noIdx)
+                            downLoadImage(image_src, img_no_url, 'not_receipt', noIdx)
                             noIdx += 1
+                        else:
+                            print('종료')
 
-                    isLastImage = True
                     # URL 저장
                     downLoadUrl(url_name, yesIdx, noIdx)
                     print("*** URL 저장 완료 ***")
@@ -226,22 +235,21 @@ def getImage(keyword, limit):
                         None
                     else:
                         # image 확인
-                        if select(image_src):
+                        if select(image_src) == 'y':
                             # image 저장
-                            downLoadImage(image_src, img_yes_url, keyword, yesIdx)
+                            downLoadImage(image_src, img_yes_url, 'receipt', yesIdx)
                             yesIdx += 1
-                        else:
+                        elif select(image_src) == 'n':
                             # image 저장
-                            downLoadImage(image_src, img_no_url, keyword, noIdx)
+                            downLoadImage(image_src, img_no_url, 'not_receipt', noIdx)
                             noIdx += 1
-                        if limit == yesIdx:
+                        else:
+                            print('종료')
                             downLoadUrl(url_name, yesIdx, noIdx)
-                            print("*** URL 저장 완료 ***")
                             break
 
-                    # 다음 사진으로 이동
-                    # aaa = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, next_arrow_class)))
 
+                    # 다음 사진으로 이동
                     nextImageBtn = browser.find_elements_by_class_name(next_arrow_class)
                     browser.execute_script("arguments[0].click();", nextImageBtn[1])
 
@@ -250,7 +258,6 @@ def getImage(keyword, limit):
 
                     # 변경된 url 로 재호출
                     browser.get(current_url)
-                    # wait = WebDriverWait(browser, 10)
                     # 다음 사진 화살표를 포함하는 클래스를 불러올 때 까지 최대 10초 대기
                     wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
                     big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
@@ -262,4 +269,8 @@ def getImage(keyword, limit):
         print("Time out")
 
 
+<<<<<<< .mine
 getImage("test1", 10)
+=======
+getImage()
+>>>>>>> .theirs
