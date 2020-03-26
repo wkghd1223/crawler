@@ -53,7 +53,9 @@ def select(image_src):
     # diff = cv2.subtract(img, np.zeros(shape=[512, 512, 3], dtype=np.uint8))
     # if diff == [0, 0, 0]:
     #     return 'e'
-    cv2.imshow('crawled', img)
+    resize_img = cv2.resize(img, (1000, 1000))
+#     cv2.imshow('crawled', img)
+    cv2.imshow('crawled', resize_img)
     while True:
         key = cv2.waitKey(0) & 0xFF
         if key == ord('n') or key == ord('N'):
