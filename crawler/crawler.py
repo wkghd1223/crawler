@@ -32,7 +32,7 @@ def downLoadUrl(url_name, yesIdx, noIdx):
         for item in url_name:
             f.write("%s\n" % item)
         f.close()
-    saveYesOrNo(yesIdx, noIdx)
+#     saveYesOrNo(yesIdx, noIdx)
 
 
 # url_to_image()를 통해 이미지를 가져오고 보여준다.
@@ -42,10 +42,10 @@ def select(image_src):
     cv2.imshow('crawled', img)
     while True:
         key = cv2.waitKey(0) & 0xFF
-        # d 누르면 사진 저장 안 함 건너뜀.
+        # n 누르면 사진 저장 안 함 건너뜀.
         if key == ord('n') or key == ord('N'):
             return 'n'
-        # d 제외 아무 키나 누르면 저장 후 넘어감.
+        # y 누르면 사진 저장 후 건너뜀.
         elif key == ord('y') or key == ord('Y'):
             return 'y'
         elif key == ord('q') or key == ord('Q'):
@@ -89,13 +89,24 @@ def downLoadImage(image_src, img_save_url, keyword, idx):
 
 
 # 삭제 예정
-# yes && no의 각각의 인덱스 저장 필수
-def saveYesOrNo(yes, no):
-    line = [str(yes), str(no)]
+# yes && no의 각각의 인덱스 업데이트
+def upDate_Idx_(src_to_idx): # test_img  디렉토리의 주소를 받는다.
+    yes_idx = next_Index(src_to_idx + r"\yes")
+    no_idx = next_Index(src_to_idx + r"\no")
+    
+    line = [yes_idx, no_idx]
     with open('yesorno.txt', 'w') as f:
         for item in line:
             f.write("%s\n" % item)
         f.close()
+        
+        
+# yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환        
+def next_Index(path): 
+    file_list = os.listdir(path)
+    file_list_jpg= [file for file in file_list if file.endswith(".jpg")]
+    matching = [s for s in file_list_jpg]
+    return len(matching)
 
 
 def getImage():
@@ -133,21 +144,24 @@ def getImage():
     # 3-2. 변경된 url로 재호출
     browser.get(current_url)
 
-    img_yes_url = "../test_img/yes"
-    img_no_url = "../test_img/no"
+    img_yes_url = r"..\test_img\yes"
+    img_no_url = r"..\test_img\no"
     # yesIdx = 1
     # noIdx = 1
 
     # txt 가져오기
-    if not os.path.exists('yesorno.txt'):
-        yesIdx = 0
-        noIdx = 0
-    else:
-        file = open('yesorno.txt', 'r')
-        line = file.readlines()
-        yesIdx = int(line[0])
-        noIdx = int(line[1])
-        file.close()
+#     if not os.path.exists('yesorno.txt'):
+#         yesIdx = 0
+#         noIdx = 0
+#     else:
+#         file = open('yesorno.txt', 'r')
+#         line = file.readlines()
+#         yesIdx = int(line[0])
+#         noIdx = int(line[1])
+#         file.close()
+    yesIdx = next_Index(img_yes_url)
+    noIdx = next_Index(img_no_url)
+    
 
     try:
         # 4. n3VNCb 클래스를 찾을 때 까지 최대 10초 대기
@@ -269,8 +283,5 @@ def getImage():
         print("Time out")
 
 
-<<<<<<< .mine
-getImage("test1", 10)
-=======
+
 getImage()
->>>>>>> .theirs
