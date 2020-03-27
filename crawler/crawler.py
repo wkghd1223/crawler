@@ -26,7 +26,13 @@ def url_to_image(url):
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         # return the image
         return image
-    except HTTPError as e:
+    except HTTPError:
+        return np.zeros(shape=[512, 512, 3], dtype=np.uint8)
+    except URLError:
+        return np.zeros(shape=[512, 512, 3], dtype=np.uint8)
+    except http.client.RemoteDisconnected:
+        return np.zeros(shape=[512, 512, 3], dtype=np.uint8)
+    except TimeoutError:
         return np.zeros(shape=[512, 512, 3], dtype=np.uint8)
 
 
