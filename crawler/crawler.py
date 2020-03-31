@@ -73,10 +73,12 @@ def select(image_src):
             return 'y'
         elif key == ord('q') or key == ord('Q'):
             return 'q'
-        elif key == ord('e') or key == ord('e'):
+        elif key == ord('t') or key == ord('T'):
+            return 't'
+        elif key == ord('e') or key == ord('E'):
             return 'e'
         else:
-            print('f, y, q 중 하나 선택')
+            print('e, t, n, y, q 중 하나 선택')
 
 
 # url_name[] 리스트에 image_src url이 있다면 false를 리턴한다.
@@ -91,9 +93,11 @@ def checkDuplicate(url_name, image_src):
         return False
 
 
-def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx):
-    if YN == 'Y':
+def downLoadImage(url_name, YTN, image_src, img_save_url, keyword, yesIdx, noIdx, abroadIdx):
+    if YTN == 'Y':
         idx = yesIdx
+    elif YTN == 'T':
+        idx = abroadIdx
     else:
         idx = noIdx
 
@@ -108,7 +112,7 @@ def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx)
 
         downLoadUrl(url_name)
 
-        temp = YN + str(idx) + "|" + image_src
+        temp = YTN + str(idx) + "|" + image_src
         downLoadLog(temp)
 
     except HTTPError as e:
@@ -168,8 +172,10 @@ def getImage():
 
     img_yes_url = r"..\test_img\yes"
     img_no_url = r"..\test_img\no"
+    img_abroad_url = r"..\test_img\abroad"
     yesIdx = next_Index(img_yes_url)
     noIdx = next_Index(img_no_url)
+    abroadIdx = next_Index(img_abroad_url)
 
     try:
         # 4. n3VNCb 클래스를 찾을 때 까지 최대 10초 대기
@@ -194,14 +200,19 @@ def getImage():
                 c = select(image_src)
                 if c == 'y':
                     # 이미지 저장
-                    downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
+                    downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx, abroadIdx)
                     print("*** 영수증 이미지 저장 완료 ***")
                     yesIdx += 1
                 elif c == 'n':
                     # image 저장
                     print("*** 영수증아닌 이미지 저장 완료 ***")
-                    downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx)
+                    downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx, abroadIdx)
                     noIdx += 1
+                elif c == 't':
+                    # image 저장
+                    print("*** 외국 영수증 이미지 저장 완료 ***")
+                    downLoadImage(url_name, 'T', image_src, img_abroad_url, 'abroad_receipt', yesIdx, noIdx, abroadIdx)
+                    abroadIdx += 1
                 elif c == 'e':
                     print("err")
                 else:
@@ -232,13 +243,18 @@ def getImage():
                         c = select(image_src)
                         if c == 'y':
                             # 이미지 저장
-                            downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
+                            downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx, abroadIdx)
                             print("*** 영수증 이미지 저장 완료 ***")
                             yesIdx += 1
+                        elif c == 't':
+                            # image 저장
+                            print("*** 외국 영수증 이미지 저장 완료 ***")
+                            downLoadImage(url_name, 'T', image_src, img_abroad_url, 'abroad_receipt', yesIdx, noIdx, abroadIdx)
+                            abroadIdx += 1  
                         elif c == 'n':
                             # image 저장
                             print("*** 영수증아닌 이미지 저장 완료 ***")
-                            downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx)
+                            downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx, abroadIdx)
                             noIdx += 1
                         elif c == 'e':
                             print('err')
@@ -259,14 +275,19 @@ def getImage():
                         c = select(image_src)
                         if c == 'y':
                             # image 저장
-                            downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx)
+                            downLoadImage(url_name, 'Y', image_src, img_yes_url, 'receipt', yesIdx, noIdx, abroadIdx)
                             print("*** 영수증 이미지 저장 완료 ***")
                             yesIdx += 1
                         elif c == 'n':
                             # image 저장
                             print("*** 영수증아닌 이미지 저장 완료 ***")
-                            downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx)
+                            downLoadImage(url_name, 'N', image_src, img_no_url, 'not_receipt', yesIdx, noIdx, abroadIdx)
                             noIdx += 1
+                        elif c == 't':
+                            # image 저장
+                            print("*** 외국 영수증 이미지 저장 완료 ***")
+                            downLoadImage(url_name, 'T', image_src, img_abroad_url, 'abroad_receipt', yesIdx, noIdx, abroadIdx)
+                            abroadIdx += 1
                         elif c == 'e':
                             print('err')
                         else:
