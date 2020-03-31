@@ -37,7 +37,7 @@ def url_to_image(url):
 
 
 # url_name 배열을 통해 파일에 write한다.
-def downLoadUrl(url_name, yesIdx, noIdx):
+def downLoadUrl(url_name):
     with open('img_list.txt', 'w') as f:
         for item in url_name:
             f.write("%s\n" % item)
@@ -105,9 +105,8 @@ def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx)
     # 이미지 저장
     try:
         urllib.request.urlretrieve(image_src, img_save_url + "/" + keyword + "-" + str(idx) + ".jpg")
-        print("이미지 저장 " + str(idx + 1))
 
-        downLoadUrl(url_name, yesIdx, noIdx)
+        downLoadUrl(url_name)
 
         temp = YN + str(idx) + "|" + image_src
         downLoadLog(temp)
@@ -124,20 +123,6 @@ def downLoadImage(url_name, YN, image_src, img_save_url, keyword, yesIdx, noIdx)
     except TimeoutError as e:
         print("*** " + str(idx) + "번 째 사진 저장 중 에러 : ")
         print(e)
-
-
-# 삭제 예정
-# yes && no의 각각의 인덱스 업데이트
-def upDate_Idx_(src_to_idx):  # test_img  디렉토리의 주소를 받는다.
-    yes_idx = next_Index(src_to_idx + r"\yes")
-    no_idx = next_Index(src_to_idx + r"\no")
-
-    line = [yes_idx, no_idx]
-    with open('yesorno.txt', 'w') as f:
-        for item in line:
-            f.write("%s\n" % item)
-        f.close()
-
 
 # yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환        
 def next_Index(path):
@@ -161,7 +146,7 @@ def getImage():
             i += 1
 
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiAEJZavgeY05aJ0afQsQsIynCBphCl8IAxIn1gfkB-MH4geACNUH8QJRgQjfB7s0vDTBNMI05j3YNJUn_1zfANMM0GjCgW0XCkYmWG4oAx9U6u9fbuKrGq1YXcPjgTLk4OE8Tjex7PzaUHMhOM37MUYOdWSYgBAwLEI6u_1ggaCgoICAESBBCRHTAM&sxsrf=ALeKk032KdCH8Ow_JAjgjBHU1K2jePDGkA:1585301207787&q=%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&sa=X&ved=2ahUKEwjtoeiaq7roAhWWZt4KHTWqD6UQsw56BAgBEAE&biw=932&bih=762"
+    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiQEJZMqIHSk2Ci4afgsQsIynCBpiCmAIAxIo1gfVB-IH1wfYB_1EC8QfUB-8HgAjRNMc0wjThPbs0vT7PNNA0xDaONxoweEAbaHuJCyUlTCN_1JvDrk2hGN6MIT1ypwPhyBfbnFUhCDcg83NaCHKy2zg7cGxXRIAQMCxCOrv4IGgoKCAgBEgT412yEDA&q=%EB%A7%A4%EC%B6%9C+%EC%A0%84%ED%91%9C&tbm=isch&sa=X&ved=2ahUKEwift9e_7sHoAhXac3AKHWi0BUEQsw56BAgBEAE&biw=929&bih=888"
     # 상대경로 또는 txt파일 읽기
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
