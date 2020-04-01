@@ -45,7 +45,7 @@ def downLoadUrl(url_name):
 
 
 def downLoadLog(url_name):
-    with open('log', 'a') as f:
+    with open('log.log', 'a') as f:
         time_now = datetime.datetime.now()
         time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
         f.write("%s %s\n" % (time_now, url_name))
@@ -150,7 +150,7 @@ def getImage():
             i += 1
 
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiQEJZMqIHSk2Ci4afgsQsIynCBpiCmAIAxIo1gfVB-IH1wfYB_1EC8QfUB-8HgAjRNMc0wjThPbs0vT7PNNA0xDaONxoweEAbaHuJCyUlTCN_1JvDrk2hGN6MIT1ypwPhyBfbnFUhCDcg83NaCHKy2zg7cGxXRIAQMCxCOrv4IGgoKCAgBEgT412yEDA&q=%EB%A7%A4%EC%B6%9C+%EC%A0%84%ED%91%9C&tbm=isch&sa=X&ved=2ahUKEwift9e_7sHoAhXac3AKHWi0BUEQsw56BAgBEAE&biw=929&bih=888"
+    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiAEJncnxWUWRqK0afQsQsIynCBphCl8IAxIn5AfiB9YH4weSCdkHgAjxB9UHUME0wjS7NNE0xzSVJ-Y90T3ANL80GjCXiBn0gTEtvRGR_1NFSqdeLJK7B27swcKjkqIZ_1sqMUnTLHlKjnpgZprlQ8D3jJWtIgBAwLEI6u_1ggaCgoICAESBC52prsM&sxsrf=ALeKk00Yr0Peg_2Lue9NOh2fjkke4PWGKA:1585720374050&q=%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&sa=X&ved=2ahUKEwiHvO7cxMboAhWI-2EKHSaAAHoQsw56BAgBEAE&biw=1536&bih=674"
     # 상대경로 또는 txt파일 읽기
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
@@ -307,7 +307,6 @@ def getImage():
                     wait.until(lambda browsers: browser.find_element_by_css_selector(".CIF8af, .gvi3cf"))
                     big_image = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'n3VNCb')))
 
-            print(url_name)
             browser.close()
 
     except TimeoutException:
