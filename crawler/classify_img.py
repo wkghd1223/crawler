@@ -45,11 +45,14 @@ def move_img(filename, filename_frame, judgement):
     elif judgement == 'n':
         new_name = 'not_receipt'
         os.chdir(r"..\no")
-    else:
+    elif judgement == 't':
         new_name = 'abroad_receipt'
         os.chdir(r"..\abroad")
+    else:
+        new_name = 'trash'
+        os.chdir(r"..\trash")
 
-    i = len(os.listdir('.'))
+    i = len(os.listdir('.')) - 1
 
     cv2.imwrite(new_name+"-"+ str(i) +".jpg", img)
 
@@ -86,6 +89,8 @@ def select_img(filename):
             return 't'
         elif key == ord('e') or key == ord('E'):
             return 'e'
+        elif key == ord('d') or key == ord('d'):
+            return 'd'
         else:
             print('e, t, n, y, q 중 하나 선택')
 

@@ -150,7 +150,7 @@ def getImage():
             i += 1
 
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiAEJncnxWUWRqK0afQsQsIynCBphCl8IAxIn5AfiB9YH4weSCdkHgAjxB9UHUME0wjS7NNE0xzSVJ-Y90T3ANL80GjCXiBn0gTEtvRGR_1NFSqdeLJK7B27swcKjkqIZ_1sqMUnTLHlKjnpgZprlQ8D3jJWtIgBAwLEI6u_1ggaCgoICAESBC52prsM&sxsrf=ALeKk00Yr0Peg_2Lue9NOh2fjkke4PWGKA:1585720374050&q=%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&sa=X&ved=2ahUKEwiHvO7cxMboAhWI-2EKHSaAAHoQsw56BAgBEAE&biw=1536&bih=674"
+    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiQEJB1zSE_1RJseQafgsQsIynCBpiCmAIAxIo1gfxB4AI4AXVB5gB4geXE98C_1gfqNuk2syivKJU07Sf4NNU96zbHNBow_1R6SXhCL4HGLmCMzPh_198yCr-IRFtEitjreG9_1v8_1ZafpwvDgPiipvx5zA10LvvTIAQMCxCOrv4IGgoKCAgBEgTxYBY7DA&sxsrf=ALeKk02Bb9oG2RpnMC-cVImEXCaMOWGUEA:1585879917434&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&sa=X&ved=2ahUKEwif9YmJl8voAhW6wosBHUfoB_gQsw56BAgBEAE&biw=1185&bih=761"
     # 상대경로 또는 txt파일 읽기
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
