@@ -14,7 +14,7 @@ from selenium.common.exceptions import JavascriptException
 import time
 import datetime
 import os
-
+import sys
 
 # url을 통해 mat형태의 이미지를 만들어내는 함수
 def url_to_image(url):
@@ -136,7 +136,7 @@ def next_Index(path):
     return len(matching)
 
 
-def getImage():
+def getImage(arg):
     # txt 가져오기
     if not os.path.exists('img_list.txt'):
         url_name = []
@@ -150,7 +150,7 @@ def getImage():
             i += 1
 
     # 1. 키워드를 넣고 webdriver 실행
-    url = "https://www.google.com/search?hl=ko&tbs=simg:CAESiQEJB1zSE_1RJseQafgsQsIynCBpiCmAIAxIo1gfxB4AI4AXVB5gB4geXE98C_1gfqNuk2syivKJU07Sf4NNU96zbHNBow_1R6SXhCL4HGLmCMzPh_198yCr-IRFtEitjreG9_1v8_1ZafpwvDgPiipvx5zA10LvvTIAQMCxCOrv4IGgoKCAgBEgTxYBY7DA&sxsrf=ALeKk02Bb9oG2RpnMC-cVImEXCaMOWGUEA:1585879917434&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&sa=X&ved=2ahUKEwif9YmJl8voAhW6wosBHUfoB_gQsw56BAgBEAE&biw=1185&bih=761"
+    url = arg
     # 상대경로 또는 txt파일 읽기
     browser = webdriver.Chrome("C:\python_test\chromedriver\chromedriver.exe")
     browser.get(url)
@@ -311,6 +311,7 @@ def getImage():
 
     except TimeoutException:
         print("Time out")
+# "https://www.google.com/search?hl=ko&tbs=simg:CAESiQEJB1zSE_1RJseQafgsQsIynCBpiCmAIAxIo1gfxB4AI4AXVB5gB4geXE98C_1gfqNuk2syivKJU07Sf4NNU96zbHNBow_1R6SXhCL4HGLmCMzPh_198yCr-IRFtEitjreG9_1v8_1ZafpwvDgPiipvx5zA10LvvTIAQMCxCOrv4IGgoKCAgBEgTxYBY7DA&sxsrf=ALeKk02Bb9oG2RpnMC-cVImEXCaMOWGUEA:1585879917434&q=%EC%8B%A0%EC%9A%A9+%EC%B9%B4%EB%93%9C+%EC%98%81%EC%88%98%EC%A6%9D&tbm=isch&sa=X&ved=2ahUKEwif9YmJl8voAhW6wosBHUfoB_gQsw56BAgBEAE&biw=1185&bih=761"
 
-
-getImage()
+if sys.argv[1]:
+    getImage(sys.argv[1])
