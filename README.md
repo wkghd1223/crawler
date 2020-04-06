@@ -1,7 +1,8 @@
 # crawler
 ## crawler.py
+실행방법 :
+
 	python crawler "${url_name}"
-으로 실행한다.
 url 이름에 &가 껴있으면 백그라운드 실행이 되어 ""로 감싸줘야한다.
 
 ## crawler.sh 
