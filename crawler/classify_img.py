@@ -15,7 +15,7 @@ import time
 import datetime
 import os
 
-
+# Y, N, Q, T, E 중 하나만 입력 받는 함수.
 def scanf():
     while True:
         key = input()
@@ -32,9 +32,9 @@ def scanf():
         else:
             print('e, t, n, y, q 중 하나 선택')
 
-# 재분류 한 사진들을 각각의 디렉토리로 이동 해주는 함수.
+# 재분류 한 사진들을 각각의 올바른 디렉토리로 이동 시키는 함수.
 def move_img(filename, filename_frame, judgement):
-    # 현재 작업 중인 디렉터리 위치를 가져온다.
+    # 현재 작업 중인 디렉터리 위치를 저장해둔다.
     old_dir = os.getcwd()
     img = cv2.imread(filename)
     idx_list = []
@@ -52,7 +52,7 @@ def move_img(filename, filename_frame, judgement):
         new_name = 'trash'
         os.chdir(r"..\trash")
 
-    
+
     i = len(os.listdir('.')) - 1
 
 
@@ -66,7 +66,7 @@ def move_img(filename, filename_frame, judgement):
     os.remove(filename)
     os.rename(filename_frame + "-"+ str(i) +".jpg", filename)
 
-
+# 재분류 할 디렉토리 내의 사진들을 차례대로 보여주고, 재분류에 대한 입력을 받는다.
 def select_img(filename):
     img = cv2.imread(filename)
     # diff = cv2.subtract(img, np.zeros(shape=[512, 512, 3], dtype=np.uint8))
@@ -109,6 +109,8 @@ def getImage():
     # 재분류 할 이미지 폴더 선택을 질문한다.
     print('which folder do you want to classify?')
     print('y: yes\tn: no\tt: abroad')
+
+    # 재분류 할 폴더를 선택하므로 scanf() 사용.
     key = scanf()
     if key == 'y':
         url = r"..\test_img\yes"
