@@ -15,6 +15,13 @@ import time
 import datetime
 import os
 
+# yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환
+def next_Index(path):
+    file_list = os.listdir(path)
+    file_list_jpg = [file for file in file_list if file.endswith(".jpg")]
+    matching = [s for s in file_list_jpg]
+    return len(matching)
+
 # Y, N, Q, T, E 중 하나만 입력 받는 함수.
 def scanf():
     while True:
@@ -96,14 +103,6 @@ def select_img(filename):
             return 'd'
         else:
             print('e, t, n, y, q 중 하나 선택')
-
-# yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환
-def next_Index(path):
-    file_list = os.listdir(path)
-    file_list_jpg = [file for file in file_list if file.endswith(".jpg")]
-    matching = [s for s in file_list_jpg]
-    return len(matching)
-
 
 def getImage():
     # 재분류 할 이미지 폴더 선택을 질문한다.
