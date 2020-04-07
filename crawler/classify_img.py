@@ -32,9 +32,9 @@ def scanf():
         else:
             print('e, t, n, y, q 중 하나 선택')
 
-
+# 재분류 한 사진들을 각각의 디렉토리로 이동 해주는 함수.
 def move_img(filename, filename_frame, judgement):
-
+    # 현재 작업 중인 디렉터리 위치를 가져온다.
     old_dir = os.getcwd()
     img = cv2.imread(filename)
     idx_list = []
@@ -52,7 +52,9 @@ def move_img(filename, filename_frame, judgement):
         new_name = 'trash'
         os.chdir(r"..\trash")
 
+    
     i = len(os.listdir('.')) - 1
+
 
     cv2.imwrite(new_name+"-"+ str(i) +".jpg", img)
 
@@ -64,6 +66,7 @@ def move_img(filename, filename_frame, judgement):
     os.remove(filename)
     os.rename(filename_frame + "-"+ str(i) +".jpg", filename)
 
+
 def select_img(filename):
     img = cv2.imread(filename)
     # diff = cv2.subtract(img, np.zeros(shape=[512, 512, 3], dtype=np.uint8))
@@ -74,8 +77,8 @@ def select_img(filename):
     except cv2.error as e:
         resize_img = np.zeros(shape=[512, 512, 3], dtype=np.uint8)
         return 'e'
-#     cv2.imshow('crawled', img)
-#     cv2.imshow(filename, resize_img)
+    # cv2.imshow('crawled', img)
+    # cv2.imshow(filename, resize_img)
     cv2.imshow('crawled', resize_img)
     while True:
         key = cv2.waitKey(0) & 0xFF
@@ -103,7 +106,7 @@ def next_Index(path):
 
 
 def getImage():
-
+    # 재분류 할 이미지 폴더 선택을 질문한다.
     print('which folder do you want to classify?')
     print('y: yes\tn: no\tt: abroad')
     key = scanf()
@@ -114,11 +117,14 @@ def getImage():
     else:
         url= r"..\test_img\abroad"
 
-
+    # n에 현재 디렉토리의 이미지 파일 개수를 저장
     n = next_Index(url) - 1
     i = 0
-    filename_frame = key == 'y' and 'receipt' or key == 'n' and 'not_receipt' or 'abroad_receipt'
-
+    # A = (condition1) ? Y : (condition2) ? N : T 
+    # 삼항연산자의 이중 구조
+    filename_frame = (key == 'y') and 'receipt' or (key == 'n') and 'not_receipt' or 'abroad_receipt'
+    
+    # 선택한 폴더를 현재 작업 디렉토리로 변경한다.
     os.chdir(url)
 
     try:
