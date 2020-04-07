@@ -32,6 +32,15 @@ def scanf():
         else:
             print('e, t, n, y, q 중 하나 선택')
 
+
+def swap_log(old_url, new_url):
+    with open('log.log', 'a') as f:
+        time_now = datetime.datetime.now()
+        time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
+        f.write("%s %s -> %s\n" % (time_now, old_url, new_url))
+        f.close()
+
+
 # 재분류 한 사진들을 각각의 디렉토리로 이동 해주는 함수.
 def move_img(filename, filename_frame, judgement):
     # 현재 작업 중인 디렉터리 위치를 가져온다.
@@ -52,19 +61,22 @@ def move_img(filename, filename_frame, judgement):
         new_name = 'trash'
         os.chdir(r"..\trash")
 
-    
     i = len(os.listdir('.')) - 1
-
 
     cv2.imwrite(new_name+"-"+ str(i) +".jpg", img)
 
     os.chdir(old_dir)
 
     # readme파일 포함
-    i = len(os.listdir('.')) - 2
+    j = len(os.listdir('.')) - 2
 
     os.remove(filename)
-    os.rename(filename_frame + "-"+ str(i) +".jpg", filename)
+    os.rename(filename_frame + "-"+ str(j) +".jpg", filename)
+
+    swap_log(filename, new_name+"-"+ str(i) +".jpg")
+    swap_log(filename_frame + "-"+ str(j) +".jpg", filename)
+
+
 
 
 def select_img(filename):
