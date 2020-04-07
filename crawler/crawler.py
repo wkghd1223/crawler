@@ -137,6 +137,9 @@ def next_Index(path):
 
 
 def getImage(arg):
+
+    downLoadLog("Search URL : " + arg)
+
     # txt 가져오기
     if not os.path.exists('img_list.txt'):
         url_name = []
