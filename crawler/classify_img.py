@@ -32,13 +32,14 @@ def scanf():
         else:
             print('e, t, n, y, q 중 하나 선택')
 
-
-def swap_log(old_url, new_url):
-    with open('log.log', 'a') as f:
-        time_now = datetime.datetime.now()
-        time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
-        f.write("%s %s -> %s\n" % (time_now, old_url, new_url))
-        f.close()
+#
+# def swap_log(old_url, new_url):
+#     with open('./log.log', 'a') as f:
+#         time_now = datetime.datetime.now()
+#         time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
+#         f.write("%s %s -> %s\n" % (time_now, old_url, new_url))
+#         print(old_url+" -> "+new_url)
+#         f.close()
 
 
 # 재분류 한 사진들을 각각의 디렉토리로 이동 해주는 함수.
@@ -46,7 +47,6 @@ def move_img(filename, filename_frame, judgement):
     # 현재 작업 중인 디렉터리 위치를 가져온다.
     old_dir = os.getcwd()
     img = cv2.imread(filename)
-    idx_list = []
 
     if judgement == 'y':
         new_name = 'receipt'
@@ -73,10 +73,8 @@ def move_img(filename, filename_frame, judgement):
     os.remove(filename)
     os.rename(filename_frame + "-"+ str(j) +".jpg", filename)
 
-    swap_log(filename, new_name+"-"+ str(i) +".jpg")
-    swap_log(filename_frame + "-"+ str(j) +".jpg", filename)
-
-
+    # swap_log(filename, new_name+"-"+ str(i) +".jpg")
+    # swap_log(filename_frame + "-"+ str(j) +".jpg", filename)
 
 
 def select_img(filename):
@@ -106,8 +104,10 @@ def select_img(filename):
             return 'e'
         elif key == ord('d') or key == ord('d'):
             return 'd'
+        elif key == ord('z') or key == ord('z'):
+            return 'z'
         else:
-            print('e, t, n, y, q 중 하나 선택')
+            print('e, t, n, y, q, z 중 하나 선택')
 
 # yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환
 def next_Index(path):
@@ -148,10 +148,11 @@ def getImage():
                 break
             elif key == 'e':
                 None
+            elif key == 'z':
+                if i != 0:
+                    i -= 2
             else:
                 move_img(filename, filename_frame, key)
-
-            print(filename)
             i += 1
 
     except TimeoutException:
