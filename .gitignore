@@ -1,7 +1,8 @@
 .git
 .idea
 img/*.jpg
-./crawler/*.txt
-test_img/*jpg
+/crawler/img_list.txt
+/crawler/log.log
+test_img/*.zip
 test_img/**/*jpg
 .DS_Store
