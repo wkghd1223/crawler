@@ -15,12 +15,14 @@ import time
 import datetime
 import os
 
+
 # yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환
 def next_Index(path):
     file_list = os.listdir(path)
     file_list_jpg = [file for file in file_list if file.endswith(".jpg")]
     matching = [s for s in file_list_jpg]
     return len(matching)
+
 
 # Y, N, Q, T, E 중 하나만 입력 받는 함수.
 def scanf():
@@ -40,13 +42,13 @@ def scanf():
             print('e, t, n, y, q 중 하나 선택')
 
 # 재분류 한 사진들을 각각의 디렉토리로 이동 해주는 함수.
-# def swap_log(old_url, new_url):
-#     with open('./log.log', 'a') as f:
-#         time_now = datetime.datetime.now()
-#         time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
-#         f.write("%s %s -> %s\n" % (time_now, old_url, new_url))
-#         print(old_url+" -> "+new_url)
-#         f.close()
+def swap_log(old_url, new_url):
+    with open('../../crawler/log.log', 'a') as f:
+        time_now = datetime.datetime.now()
+        time_now = time_now.strftime("[%Y.%m.%d %H:%M:%S]")
+        f.write("%s %s -> %s\n" % (time_now, old_url, new_url))
+        print(old_url+" -> "+new_url)
+        f.close()
 
 
 # 재분류 한 사진들을 각각의 디렉토리로 이동 해주는 함수.
@@ -78,12 +80,13 @@ def move_img(filename, filename_frame, judgement):
     j = len(os.listdir('.')) - 2
 
     os.remove(filename)
-    os.rename(filename_frame + "-"+ str(j) +".jpg", filename)
+    os.rename(filename_frame + "-" + str(j) +".jpg", filename)
 
-    # swap_log(filename, new_name+"-"+ str(i) +".jpg")
-    # swap_log(filename_frame + "-"+ str(j) +".jpg", filename)
+    swap_log(filename, new_name+"-"+ str(i) +".jpg")
+    swap_log(filename_frame + "-"+ str(j) +".jpg", filename)
 
 # 재분류 할 디렉토리 내의 사진들을 차례대로 보여주고, 재분류에 대한 입력을 받는다.
+
 
 def select_img(filename):
     img = cv2.imread(filename)
@@ -117,6 +120,7 @@ def select_img(filename):
         else:
             print('e, t, n, y, q, z 중 하나 선택')
 
+
 def getImage():
     # 재분류 할 이미지 폴더 선택을 질문한다.
     print('which folder do you want to classify?')
@@ -141,23 +145,20 @@ def getImage():
     # 선택한 폴더를 현재 작업 디렉토리로 변경한다.
     os.chdir(url)
 
-    try:
-        while n > i:
+    while n > i:
 
-            filename = filename_frame+ '-'+ str(i) + '.jpg'
-            key = select_img(filename)
-            if key == 'q':
-                break
-            elif key == 'e':
-                None
-            elif key == 'z':
-                if i != 0:
-                    i -= 2
-            else:
-                move_img(filename, filename_frame, key)
-            i += 1
+        filename = filename_frame+ '-'+ str(i) + '.jpg'
+        key = select_img(filename)
+        if key == 'q':
+            break
+        elif key == 'e':
+            None
+        elif key == 'z':
+            if i != 0:
+                i -= 2
+        else:
+            move_img(filename, filename_frame, key)
+        i += 1
 
-    except TimeoutException:
-        print("Time out")
 
 getImage()
