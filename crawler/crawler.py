@@ -72,7 +72,13 @@ def downLoadLog(downloadFolder):
     with open(logpath, 'w') as f:
         json.dump(logs_array, f, default=default, indent=1)
         f.close()
-
+    with open ('log.txt', 'a+') as f:
+        if downloadFolder['key'] == 'e':
+            print(str(downloadFolder['timestamp']) + '\t|\tpass')
+            f.write(str(downloadFolder['timestamp']) + '\t|\tpass\n')        
+        else:
+            print(str(downloadFolder['timestamp']) + '\t|\t' + downloadFolder['folder'] +"/"+downloadFolder['name']+"-"+str(downloadFolder['idx']))
+            f.write(str(downloadFolder['timestamp']) + '\t|\t' + downloadFolder['folder'] +"/"+downloadFolder['name']+"-"+str(downloadFolder['idx'])+'\n')
 
 # url_to_image()를 통해 이미지를 가져오고 보여준다.
 # 그 후 저장한다.
@@ -147,6 +153,8 @@ def downLoadImage(url_name, YTN, image_src, folders):
 
 # yes, no 이미지들 저장하는 디렉토리의 주소를 받는다.(../test_img/yes,no) 그 안의 .jpg로 저장 된 사진들 수 확인 후 다음 인덱스 반환        
 def next_Index(path):
+    if not (os.path.isdir(path)):
+        os.mkdir(os.path.join(path))
     file_list = os.listdir(path)
     file_list_jpg = [file for file in file_list if file.endswith(".jpg")]
     matching = [s for s in file_list_jpg]
