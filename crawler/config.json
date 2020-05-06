@@ -1,0 +1,30 @@
+{
+    "chrome": "C:/python_test/chromedriver/chromedriver.exe",
+    "log"   : "log.json",
+    "num"   : "3",
+    "downloadSrc":"../test_img",
+    "category":[
+        {
+            "folder":"yes",
+            "key":"y",
+            "name":"receipt"
+        },
+        {
+            "folder":"no",
+            "key":"n",
+            "name":"not_receipt"
+        },
+        {
+            "folder":"abroad",
+            "key":"t",
+            "name":"abroad_receipt"
+        },
+        {
+            "folder":"japan",
+            "key":"r",
+            "name":"jp"
+        }
+    ],
+    "errorKey":"e",
+    "endKey":"q"
+}
