@@ -210,10 +210,10 @@ def getImage(arg):
         # 2. 구글 검색의 작은 이미지들의 공통 클래스를 찾음
         small_images = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'rg_i')))
         small_images.click()
-        # small_images = browser.find_elements_by_class_name("rg_i")
+        small_images = browser.find_elements_by_class_name("rg_i")
 
         # 3. 작은 이미지를 한번 클릭하여 우측에 상세창 (큰이미지)을 호출 -> url 변경됨
-        # small_images[0].click()
+        small_images[0].click()
 
         # 3-1. 변경된 url
         current_url = browser.current_url
