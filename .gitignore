@@ -1,10 +1,233 @@
-.git
-.idea
-img/*.jpg
-crawler/img_list.txt
-crawler/log.log
-crawler/log.json
-crawler/log.txt
-test_img/*.zip
-test_img/**/*jpg
-.DS_Store
+
+# Created by https://www.gitignore.io/api/python,pycharm,virtualenv,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=python,pycharm,virtualenv,visualstudiocode
+
+### PyCharm ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+ReceiptCrawler/.idea/
+ReceiptCrawler/.vscode/
+.idea/
+.vscode/
+# User-specific stuff
+ReceiptCrawler/.idea/**/workspace.xml
+ReceiptCrawler/.idea/**/tasks.xml
+ReceiptCrawler/.idea/**/usage.statistics.xml
+ReceiptCrawler/.idea/**/dictionaries
+ReceiptCrawler/.idea/**/shelf
+
+# Generated files
+ReceiptCrawler/.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+ReceiptCrawler/.idea/**/dataSources/
+ReceiptCrawler/.idea/**/dataSources.ids
+ReceiptCrawler/.idea/**/dataSources.local.xml
+ReceiptCrawler/.idea/**/sqlDataSources.xml
+ReceiptCrawler/.idea/**/dynamic.xml
+ReceiptCrawler/.idea/**/uiDesigner.xml
+ReceiptCrawler/.idea/**/dbnavigator.xml
+
+# Gradle
+ReceiptCrawler/.idea/**/gradle.xml
+ReceiptCrawler/.idea/**/libraries
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+# *.iml
+# *.ipr
+
+# CMake
+ReceiptCrawler/cmake-build-*/
+
+# Mongo Explorer plugin
+ReceiptCrawler/.idea/**/mongoSettings.xml
+
+# File-based project format
+ReceiptCrawler/*.iws
+
+# IntelliJ
+ReceiptCrawler/out/
+
+# mpeltonen/sbt-idea plugin
+ReceiptCrawler/.idea_modules/
+
+# JIRA plugin
+ReceiptCrawler/atlassian-ide-plugin.xml
+
+# Cursive Clojure plugin
+ReceiptCrawler/.idea/replstate.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+ReceiptCrawler/com_crashlytics_export_strings.xml
+ReceiptCrawler/crashlytics.properties
+ReceiptCrawler/crashlytics-build.properties
+ReceiptCrawler/fabric.properties
+
+# Editor-based Rest Client
+ReceiptCrawler/.idea/httpRequests
+
+# Android studio 3.1+ serialized cache file
+ReceiptCrawler/.idea/caches/build_file_checksums.ser
+
+### PyCharm Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
+# *.iml
+# modules.xml
+# .idea/misc.xml
+# *.ipr
+
+# Sonarlint plugin
+ReceiptCrawler/.idea/**/sonarlint/
+
+# SonarQube Plugin
+ReceiptCrawler/.idea/**/sonarIssues.xml
+
+# Markdown Navigator plugin
+ReceiptCrawler/.idea/**/markdown-navigator.xml
+ReceiptCrawler/.idea/**/markdown-navigator/
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+ReceiptCrawler/__pycache__/
+ReceiptCrawler/*.py[cod]
+ReceiptCrawler/*$py.class
+
+# C extensions
+ReceiptCrawler/*.so
+
+# Distribution / packaging
+ReceiptCrawler/.Python
+ReceiptCrawler/build/
+ReceiptCrawler/develop-eggs/
+ReceiptCrawler/dist/
+ReceiptCrawler/downloads/
+ReceiptCrawler/eggs/
+ReceiptCrawler/.eggs/
+ReceiptCrawler/lib/
+ReceiptCrawler/lib64/
+ReceiptCrawler/parts/
+ReceiptCrawler/sdist/
+ReceiptCrawler/var/
+ReceiptCrawler/wheels/
+ReceiptCrawler/pip-wheel-metadata/
+ReceiptCrawler/share/python-wheels/
+ReceiptCrawler/*.egg-info/
+ReceiptCrawler/.installed.cfg
+ReceiptCrawler/*.egg
+ReceiptCrawler/MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+ReceiptCrawler/*.manifest
+ReceiptCrawler/*.spec
+
+# Installer logs
+ReceiptCrawler/pip-log.txt
+ReceiptCrawler/pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+ReceiptCrawler/htmlcov/
+ReceiptCrawler/.tox/
+ReceiptCrawler/.nox/
+ReceiptCrawler/.coverage
+ReceiptCrawler/.coverage.*
+ReceiptCrawler/.cache
+ReceiptCrawler/nosetests.xml
+ReceiptCrawler/coverage.xml
+ReceiptCrawler/*.cover
+ReceiptCrawler/.hypothesis/
+ReceiptCrawler/.pytest_cache/
+
+# Translations
+ReceiptCrawler/*.mo
+ReceiptCrawler/*.pot
+
+# Scrapy stuff:
+ReceiptCrawler/.scrapy
+
+# Sphinx documentation
+ReceiptCrawler/docs/_build/
+
+# PyBuilder
+ReceiptCrawler/target/
+
+# pyenv
+ReceiptCrawler/.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# celery beat schedule file
+ReceiptCrawler/celerybeat-schedule
+
+# SageMath parsed files
+ReceiptCrawler/*.sage.py
+
+# Spyder project settings
+ReceiptCrawler/.spyderproject
+ReceiptCrawler/.spyproject
+
+# Rope project settings
+ReceiptCrawler/.ropeproject
+
+# Mr Developer
+ReceiptCrawler/.mr.developer.cfg
+ReceiptCrawler/.project
+ReceiptCrawler/.pydevproject
+
+# mkdocs documentation
+ReceiptCrawler//site
+
+# mypy
+ReceiptCrawler/.mypy_cache/
+ReceiptCrawler/.dmypy.json
+ReceiptCrawler/dmypy.json
+
+# Pyre type checker
+ReceiptCrawler/.pyre/
+
+### VirtualEnv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+ReceiptCrawler/pyvenv.cfg
+ReceiptCrawler/.env
+ReceiptCrawler/.venv
+ReceiptCrawler/env/
+ReceiptCrawler/venv/
+ReceiptCrawler/ENV/
+ReceiptCrawler/env.bak/
+ReceiptCrawler/venv.bak/
+ReceiptCrawler/pip-selfcheck.json
+
+### VisualStudioCode ###
+ReceiptCrawler/.vscode/*
+ReceiptCrawler/!.vscode/settings.json
+ReceiptCrawler/!.vscode/tasks.json
+ReceiptCrawler/!.vscode/launch.json
+ReceiptCrawler/!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+ReceiptCrawler/.history
+
+# End of https://www.gitignore.io/api/python,pycharm,virtualenv,visualstudiocode
+crawler/
+ReceiptCrawler/test_img/
+ReceiptCrawler/log.txt
+ReceiptCrawler/img_list.txt
+ReceiptCrawler/log.json
+ReceiptCrawler/Lib/
+ReceiptCrawler/Scripts/
+ReceiptCrawler/Include/

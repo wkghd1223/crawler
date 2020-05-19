@@ -1,7 +1,7 @@
 {
     "chrome": "C:/python_test/chromedriver/chromedriver.exe",
     "log"   : "log.json",
-    "downloadSrc":"../test_img",
+    "downloadSrc":"./test_img",
     "category":[
         {
             "folder":"yes",
