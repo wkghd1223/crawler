@@ -4,29 +4,19 @@
     "downloadSrc":"./test_img",
     "category":[
         {
-            "folder":"yes",
-            "key":"y",
-            "name":"receipt"
+            "folder":"vietnam",
+            "key":"t",
+            "name":"vietnam"
         },
         {
-            "folder":"no",
-            "key":"n",
-            "name":"not_receipt"
-        },
-        {
-            "folder":"abroad",
-            "key":"h",
-            "name":"abroad_receipt"
-        },
-        {
-            "folder":"japan",
+            "folder":"vietnam-neutral",
             "key":"r",
-            "name":"jp"
+            "name":"vietnam-neutral"
         },
         {
-            "folder":"japan-neutral",
+            "folder":"vietnam-diff",
             "key":"w",
-            "name":"japan-neutral"
+            "name":"vietnam-diff"
         }
     ],
     "errorKey":"e",
